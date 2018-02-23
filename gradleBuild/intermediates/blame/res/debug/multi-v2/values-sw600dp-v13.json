@@ -1,10 +1,27 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/gradleBuild/intermediates/incremental/mergeDebugResources/merged.dir/values-sw600dp-v13/values-sw600dp-v13.xml",
+            "outputFile": "/Users/varuniyer/GuideDog/gradleBuild/intermediates/incremental/mergeDebugResources/merged.dir/values-sw600dp-v13/values-sw600dp-v13.xml",
             "map": [
                 {
-                    "source": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/res/values-sw600dp/template-styles.xml",
+                    "source": "/Users/varuniyer/GuideDog/res/values-sw600dp/template-dimens.xml",
+                    "from": {
+                        "startLines": "20,21",
+                        "startColumns": "4,4",
+                        "startOffsets": "669,737",
+                        "endColumns": "67,67",
+                        "endOffsets": "732,800"
+                    },
+                    "to": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,123",
+                        "endColumns": "67,67",
+                        "endOffsets": "118,186"
+                    }
+                },
+                {
+                    "source": "/Users/varuniyer/GuideDog/res/values-sw600dp/template-styles.xml",
                     "from": {
                         "startLines": "18",
                         "startColumns": "4",
@@ -20,23 +37,6 @@
                         "endLines": "8",
                         "endColumns": "12",
                         "endOffsets": "431"
-                    }
-                },
-                {
-                    "source": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/res/values-sw600dp/template-dimens.xml",
-                    "from": {
-                        "startLines": "20,21",
-                        "startColumns": "4,4",
-                        "startOffsets": "669,737",
-                        "endColumns": "67,67",
-                        "endOffsets": "732,800"
-                    },
-                    "to": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,123",
-                        "endColumns": "67,67",
-                        "endOffsets": "118,186"
                     }
                 }
             ]

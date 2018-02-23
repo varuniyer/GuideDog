@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/gradleBuild/intermediates/incremental/mergeDebugResources/merged.dir/values-v21/values-v21.xml",
+            "outputFile": "/Users/varuniyer/GuideDog/gradleBuild/intermediates/incremental/mergeDebugResources/merged.dir/values-v21/values-v21.xml",
             "map": [
                 {
-                    "source": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/res/values-v21/base-template-styles.xml",
+                    "source": "/Users/varuniyer/GuideDog/res/values-v21/base-template-styles.xml",
                     "from": {
                         "startLines": "20",
                         "startColumns": "4",

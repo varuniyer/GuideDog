@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/gradleBuild/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
+            "outputFile": "/Users/varuniyer/GuideDog/gradleBuild/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
             "map": [
                 {
-                    "source": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/res/values/colors.xml",
+                    "source": "/Users/varuniyer/GuideDog/res/values/colors.xml",
                     "from": {
                         "startLines": "17",
                         "startColumns": "4",
@@ -21,24 +21,41 @@
                     }
                 },
                 {
-                    "source": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/res/values/styles.xml",
+                    "source": "/Users/varuniyer/GuideDog/res/values/template-dimens.xml",
                     "from": {
-                        "startLines": "16",
-                        "startColumns": "4",
-                        "startOffsets": "658",
-                        "endColumns": "95",
-                        "endOffsets": "749"
+                        "startLines": "28,24,23,22,21,20,29",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "972,893,849,804,761,719,1042",
+                        "endColumns": "69,42,43,44,42,41,67",
+                        "endOffsets": "1037,931,888,844,799,756,1105"
                     },
                     "to": {
-                        "startLines": "19",
-                        "startColumns": "4",
-                        "startOffsets": "1149",
-                        "endColumns": "94",
-                        "endOffsets": "1239"
+                        "startLines": "4,5,6,7,8,9,10",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "295,365,408,452,497,540,582",
+                        "endColumns": "69,42,43,44,42,41,67",
+                        "endOffsets": "360,403,447,492,535,577,645"
                     }
                 },
                 {
-                    "source": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/res/values/template-styles.xml",
+                    "source": "/Users/varuniyer/GuideDog/res/values/strings.xml",
+                    "from": {
+                        "startLines": "18,16,17",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "792,658,708",
+                        "endColumns": "82,49,83",
+                        "endOffsets": "870,703,787"
+                    },
+                    "to": {
+                        "startLines": "15,16,17",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "881,964,1014",
+                        "endColumns": "82,49,83",
+                        "endOffsets": "959,1009,1093"
+                    }
+                },
+                {
+                    "source": "/Users/varuniyer/GuideDog/res/values/template-styles.xml",
                     "from": {
                         "startLines": "24,20,22,27,29,34",
                         "startColumns": "4,4,4,4,4,4",
@@ -57,24 +74,7 @@
                     }
                 },
                 {
-                    "source": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/res/values/template-dimens.xml",
-                    "from": {
-                        "startLines": "28,24,23,22,21,20,29",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "972,893,849,804,761,719,1042",
-                        "endColumns": "69,42,43,44,42,41,67",
-                        "endOffsets": "1037,931,888,844,799,756,1105"
-                    },
-                    "to": {
-                        "startLines": "4,5,6,7,8,9,10",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "295,365,408,452,497,540,582",
-                        "endColumns": "69,42,43,44,42,41,67",
-                        "endOffsets": "360,403,447,492,535,577,645"
-                    }
-                },
-                {
-                    "source": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/res/values/base-strings.xml",
+                    "source": "/Users/varuniyer/GuideDog/res/values/base-strings.xml",
                     "from": {
                         "startLines": "19,20,21,18",
                         "startColumns": "4,4,4,4",
@@ -91,20 +91,20 @@
                     }
                 },
                 {
-                    "source": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/res/values/strings.xml",
+                    "source": "/Users/varuniyer/GuideDog/res/values/styles.xml",
                     "from": {
-                        "startLines": "18,16,17",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "792,658,708",
-                        "endColumns": "82,49,83",
-                        "endOffsets": "870,703,787"
+                        "startLines": "16",
+                        "startColumns": "4",
+                        "startOffsets": "658",
+                        "endColumns": "95",
+                        "endOffsets": "749"
                     },
                     "to": {
-                        "startLines": "15,16,17",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "881,964,1014",
-                        "endColumns": "82,49,83",
-                        "endOffsets": "959,1009,1093"
+                        "startLines": "19",
+                        "startColumns": "4",
+                        "startOffsets": "1149",
+                        "endColumns": "94",
+                        "endOffsets": "1239"
                     }
                 }
             ]

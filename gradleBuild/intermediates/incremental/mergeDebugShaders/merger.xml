@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/build-types/debug/shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/Users/varuniyer/GuideDog/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/Users/varuniyer/GuideDog/build-types/debug/shaders"/></dataSet></merger>

@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/gradleBuild/intermediates/incremental/mergeDebugResources/merged.dir/values-v11/values-v11.xml",
+            "outputFile": "/Users/varuniyer/GuideDog/gradleBuild/intermediates/incremental/mergeDebugResources/merged.dir/values-v11/values-v11.xml",
             "map": [
                 {
-                    "source": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/res/values-v11/styles.xml",
+                    "source": "/Users/varuniyer/GuideDog/res/values-v11/styles.xml",
                     "from": {
                         "startLines": "7,19,11",
                         "startColumns": "2,2,2",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "/Users/varuniyer/AndroidStudioProjects/android-yolo-v2/res/values-v11/template-styles.xml",
+                    "source": "/Users/varuniyer/GuideDog/res/values-v11/template-styles.xml",
                     "from": {
                         "startLines": "19",
                         "startColumns": "4",
