@@ -18,6 +18,7 @@ package org.tensorflow.yolo.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.Image.Plane;
 import android.media.ImageReader.OnImageAvailableListener;
@@ -46,9 +47,12 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
     private Handler handler;
     private HandlerThread handlerThread;
 
+    public static Context c;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(null);
+        c = getApplicationContext();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_camera);

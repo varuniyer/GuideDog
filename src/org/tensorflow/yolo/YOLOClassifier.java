@@ -14,6 +14,8 @@
 */
 package org.tensorflow.yolo;
 
+import android.os.Build;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import org.apache.commons.math3.analysis.function.Sigmoid;
@@ -23,10 +25,12 @@ import org.tensorflow.yolo.model.BoxPosition;
 import org.tensorflow.yolo.model.Recognition;
 import org.tensorflow.yolo.util.math.ArgMax;
 import org.tensorflow.yolo.util.math.SoftMax;
+import org.tensorflow.yolo.view.CameraActivity;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.PriorityQueue;
 import java.util.Vector;
 
@@ -46,6 +50,7 @@ public class YOLOClassifier {
     private final static int MAX_RESULTS = 15;
     private final static int NUMBER_OF_BOUNDING_BOX = 5;
     private static YOLOClassifier classifier;
+    public static TextToSpeech tts;
 
     private YOLOClassifier() {}
 
@@ -124,6 +129,24 @@ public class YOLOClassifier {
             double confidenceInClass = argMax.getMaxValue() * boundingBox.getConfidence();
 
             if (confidenceInClass > THRESHOLD) {
+                tts = new TextToSpeech(CameraActivity.c, new TextToSpeech.OnInitListener() {
+                    @Override
+                    public void onInit(int status) {
+                        if (status == TextToSpeech.SUCCESS) {
+                            int result = tts.setLanguage(Locale.US);
+                            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                                Log.e("TTS", "This Language is not supported");
+                            }
+                            speak("There is a " + labels.get(argMax.getIndex()) + " in front of you.");
+
+                        } else {
+                            Log.e("TTS", "Initilization Failed!");
+                        }
+                    }
+                    private void speak(String text){
+                        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+                    }
+                });
                 predictionQueue.add(new Recognition(argMax.getIndex(), labels.get(argMax.getIndex()), (float) confidenceInClass,
                         new BoxPosition((float) (boundingBox.getX() - boundingBox.getWidth() / 2),
                                 (float) (boundingBox.getY() - boundingBox.getHeight() / 2),
