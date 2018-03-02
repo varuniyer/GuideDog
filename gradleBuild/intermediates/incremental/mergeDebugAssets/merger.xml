@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/varuniyer/GuideDog/assets"><file name="tiny-yolo-voc-graph.pb" path="/Users/varuniyer/GuideDog/assets/tiny-yolo-voc-graph.pb"/><file name="tiny-yolo-voc-labels.txt" path="/Users/varuniyer/GuideDog/assets/tiny-yolo-voc-labels.txt"/></source><source path="/Users/varuniyer/GuideDog/gradleBuild/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/Users/varuniyer/GuideDog/build-types/debug/assets"/></dataSet></merger>

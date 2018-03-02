@@ -1,4 +1,0 @@
-#Fri Feb 23 02:08:36 EST 2018
-base.0=/Users/varuniyer/GuideDog/gradleBuild/intermediates/transforms/dexMerger/debug/2
-path.0=classes.dex
-renamed.0=classes.dex
