@@ -1,3 +1,3 @@
-# android-tensorflow-detection 
+# GuideDog
 
-This application makes real time object detection via TensorFlow for Mobile and warns the user verbally about them and their locations. 
+This application assists blind people by notifying them which objects are in front of them and their distance from the objects. Additionally, it aims to help blind people navigate around obstacles in their path.
