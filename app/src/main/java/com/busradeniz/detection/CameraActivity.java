@@ -1,9 +1,13 @@
+
 package com.busradeniz.detection;
 
 import android.Manifest;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
@@ -16,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Message;
 import android.os.Trace;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -23,12 +28,12 @@ import android.util.Size;
 import android.view.Surface;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Date;
-
 import com.busradeniz.detection.env.ImageUtils;
 import com.busradeniz.detection.env.Logger;
-
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.HashSet;
@@ -56,6 +61,9 @@ public abstract class CameraActivity extends Activity
     private boolean right = false;
     protected int previewWidth = 0;
     protected int previewHeight = 0;
+    private cBluetooth bl = null;
+    private boolean BT_is_Connect = false;
+    protected static String distance = "one meter away";
 
     private Runnable postInferenceCallback;
     private Runnable imageConverter;
@@ -69,6 +77,11 @@ public abstract class CameraActivity extends Activity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_camera);
+
+        bl = new cBluetooth(this, mHandler);
+        bl.checkBTState();
+        BT_is_Connect = bl.BT_Connect("00:14:03:06:47:61", true);
+        Log.d("Connected?", BT_is_Connect + "");
 
         if (hasPermission()) {
             setFragment();
@@ -396,6 +409,7 @@ public abstract class CameraActivity extends Activity
 
         StringBuilder stringBuilder = new StringBuilder();
 
+        stringBuilder.append(distance + " ");
         for (int i = 0; i < currentRecognitions.size(); i++) {
             Classifier.Recognition recognition = currentRecognitions.get(i);
             if(recognition.getTitle().equals("surfboard")){
@@ -439,7 +453,7 @@ public abstract class CameraActivity extends Activity
         }
 
         boolean time = true;
-        Date          currentTime = Calendar.getInstance().getTime();
+        Date currentTime = Calendar.getInstance().getTime();
         String str = currentTime.toString();
         Log.d("TIME", str);
         Scanner scan = new Scanner(str);
@@ -464,4 +478,50 @@ public abstract class CameraActivity extends Activity
     protected abstract int getLayoutId();
 
     protected abstract Size getDesiredPreviewFrameSize();
+
+    private static class MyHandler extends Handler {
+        private final WeakReference<CameraActivity> mActivity;
+
+        public MyHandler(CameraActivity activity) {
+            mActivity = new WeakReference<CameraActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            CameraActivity activity = mActivity.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case cBluetooth.BL_NOT_AVAILABLE:
+                        Log.d(cBluetooth.TAG, "Bluetooth is not available. Exit");
+                        Toast.makeText(activity.getBaseContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
+                        activity.finish();
+                        break;
+                    case cBluetooth.BL_INCORRECT_ADDRESS:
+                        Log.d(cBluetooth.TAG, "Incorrect MAC address");
+                        Toast.makeText(activity.getBaseContext(), "Incorrect Bluetooth address", Toast.LENGTH_SHORT).show();
+                        break;
+                    case cBluetooth.BL_REQUEST_ENABLE:
+                        Log.d(cBluetooth.TAG, "Request Bluetooth Enable");
+                        BluetoothAdapter.getDefaultAdapter();
+                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        activity.startActivityForResult(enableBtIntent, 1);
+                        break;
+                    case cBluetooth.BL_SOCKET_FAILED:
+                        Toast.makeText(activity.getBaseContext(), "Socket failed", Toast.LENGTH_SHORT).show();
+                        //activity.finish();
+                        break;
+                    case cBluetooth.RECIEVE_MESSAGE:
+                        distance = new String((byte[]) msg.obj, 0, msg.arg1);
+                        Log.d("distance", distance);
+                        break;
+                }
+            }
+        }
+    }
+
+    private final MyHandler mHandler = new MyHandler(this);
+
+    private final static Runnable sRunnable = new Runnable() {
+        public void run() { }
+    };
 }
