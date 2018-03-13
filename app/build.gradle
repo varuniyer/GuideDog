@@ -42,7 +42,7 @@ dependencies {
 
     // Tensorflow
     compile 'org.tensorflow:tensorflow-android:+'
-    compile 'com.google.android.gms:play-services-vision:10.0.0+'
+    compile 'com.google.android.gms:play-services-vision:11.8.0'
 
     // Test Dependencies
     testImplementation 'junit:junit:4.12'
