@@ -1,5 +1,9 @@
 package com.busradeniz.detection;
 
+/**
+ * Created by Shardool and Varun on 2/25/2018.
+ */
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -10,14 +14,24 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.util.Size;
+import android.util.SparseArray;
 import android.util.TypedValue;
 import android.widget.Toast;
 
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import com.busradeniz.detection.env.BorderedText;
 import com.busradeniz.detection.env.ImageUtils;
 import com.busradeniz.detection.env.Logger;
 import com.busradeniz.detection.tracking.MultiBoxTracker;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.TextBlock;
+import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -59,6 +73,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   private byte[] luminanceCopy;
 
   private BorderedText borderedText;
+
+  public Context c;
 
   @Override
   public void onPreviewSizeChosen(final Size size, final int rotation) {
@@ -145,12 +161,49 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     final Canvas canvas = new Canvas(croppedBitmap);
     canvas.drawBitmap(rgbFrameBitmap, frameToCropTransform, null);
-
+    c = getApplicationContext();
     runInBackground(
         new Runnable() {
           @Override
           public void run() {
             LOGGER.i("Running detection on image " + currTimestamp);
+
+            //TODO: ADD BITMAP -> SPEECH HERE
+            TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+
+            Frame imageFrame = new Frame.Builder()
+
+                    .setBitmap(croppedBitmap)                 // your image bitmap
+                    .build();
+
+            String imageText = "";
+
+
+            SparseArray<TextBlock> textBlocks = textRecognizer.detect(imageFrame);
+
+            for (int i = 0; i < textBlocks.size(); i++) {
+              TextBlock textBlock = textBlocks.get(textBlocks.keyAt(i));
+              imageText = textBlock.getValue();                   // return string
+
+
+            }
+
+            Log.d("text",imageText);
+
+            TextToSpeech textToSpeech = new TextToSpeech(c, new TextToSpeech.OnInitListener() {
+              @Override
+              public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                  LOGGER.i("onCreate", "TextToSpeech is initialised");
+                } else {
+                  LOGGER.e("onCreate", "Cannot initialise text to speech!");
+                }
+              }
+            });
+
+            
+            textToSpeech.speak("The text in front of you says " + imageText + ".", TextToSpeech.QUEUE_FLUSH, null);
+
             final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
 
             cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);

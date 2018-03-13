@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
-project.ext.TMP_DIR   = project.buildDir.toString() + '/downloads'
+project.ext.TMP_DIR = project.buildDir.toString() + '/downloads'
 apply from: "download-models.gradle"
 
 android {
@@ -42,6 +42,7 @@ dependencies {
 
     // Tensorflow
     compile 'org.tensorflow:tensorflow-android:+'
+    compile 'com.google.android.gms:play-services-vision:10.0.0+'
 
     // Test Dependencies
     testImplementation 'junit:junit:4.12'

@@ -1,12 +1,18 @@
 
+/**
+ * Created by Shardool and Varun on 2/25/2018.
+ */
 package com.busradeniz.detection;
 
 import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -22,6 +28,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.os.Trace;
+import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.Size;
@@ -30,6 +37,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import com.busradeniz.detection.env.ImageUtils;
@@ -38,9 +46,27 @@ import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.TextBlock;
+import com.google.android.gms.vision.text.TextRecognizer;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.util.SparseArray;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.widget.TextView;
+import java.io.IOException;
 
 public abstract class CameraActivity extends Activity
         implements OnImageAvailableListener {
@@ -50,6 +76,7 @@ public abstract class CameraActivity extends Activity
 
     private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
     private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+    private static final int REQUEST_CODE = 1234;
 
     private Handler handler;
     private HandlerThread handlerThread;
@@ -63,20 +90,31 @@ public abstract class CameraActivity extends Activity
     protected int previewHeight = 0;
     private cBluetooth bl = null;
     private boolean BT_is_Connect = false;
-    protected static String distance = "one meter away";
+    protected static String distance = "";
 
     private Runnable postInferenceCallback;
     private Runnable imageConverter;
 
     private TextToSpeech textToSpeech;
 
+    private String imageText ="";
+
+
+    SurfaceView cameraView;
+    TextView textView;
+    CameraSource cameraSource;
+    final int RequestCameraPermissionID = 1001;
+
+
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         LOGGER.d("onCreate " + this);
         super.onCreate(null);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
         setContentView(R.layout.activity_camera);
+
+
 
         bl = new cBluetooth(this, mHandler);
         bl.checkBTState();
@@ -101,6 +139,8 @@ public abstract class CameraActivity extends Activity
         });
 
     }
+
+
 
     protected int[] getRgbBytes() {
         imageConverter.run();
@@ -129,7 +169,6 @@ public abstract class CameraActivity extends Activity
             if (image == null) {
                 return;
             }
-
             if (isProcessingFrame) {
                 image.close();
                 return;
@@ -408,7 +447,6 @@ public abstract class CameraActivity extends Activity
         final double previewArea = previewWidth * previewHeight;
 
         StringBuilder stringBuilder = new StringBuilder();
-
         stringBuilder.append(distance + " ");
         for (int i = 0; i < currentRecognitions.size(); i++) {
             Classifier.Recognition recognition = currentRecognitions.get(i);
@@ -450,6 +488,10 @@ public abstract class CameraActivity extends Activity
 
         if(right){
             stringBuilder.append(" Move to the left and keep walking. ");
+        }
+
+        if(imageText.length() > 0){
+            stringBuilder.append(imageText);
         }
 
         boolean time = true;

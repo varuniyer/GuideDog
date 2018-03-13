@@ -1,5 +1,8 @@
 package com.busradeniz.detection;
 
+/**
+ * Created by Shardool and Varun on 2/25/2018.
+ */
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;

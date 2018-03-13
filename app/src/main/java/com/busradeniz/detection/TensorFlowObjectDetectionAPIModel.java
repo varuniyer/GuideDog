@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Vector;
 
+
 /**
- * Wrapper for frozen detection models trained using the Tensorflow Object Detection API:
- * github.com/tensorflow/models/tree/master/research/object_detection
+ * Created by Shardool and Varun on 2/25/2018.
  */
 public class TensorFlowObjectDetectionAPIModel implements Classifier {
   private static final Logger LOGGER = new Logger();
