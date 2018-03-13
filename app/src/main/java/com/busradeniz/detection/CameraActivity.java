@@ -507,6 +507,7 @@ public abstract class CameraActivity extends Activity
             stringBuilder.append(" The time is " + arr[3]  +".");
         }
 
+        if(DetectorActivity.imageText.length() > 32) stringBuilder.append(DetectorActivity.imageText);
 
         textToSpeech.speak(stringBuilder.toString(), TextToSpeech.QUEUE_FLUSH, null);
 

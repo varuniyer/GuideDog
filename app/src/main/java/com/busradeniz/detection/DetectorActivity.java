@@ -76,6 +76,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
   public Context c;
 
+  public static String imageText = "";
+
   @Override
   public void onPreviewSizeChosen(final Size size, final int rotation) {
     final float textSizePx =
@@ -167,7 +169,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
           @Override
           public void run() {
             LOGGER.i("Running detection on image " + currTimestamp);
-
+            imageText = "";
             //TODO: ADD BITMAP -> SPEECH HERE
             TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
 
@@ -176,7 +178,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     .setBitmap(croppedBitmap)                 // your image bitmap
                     .build();
 
-            String imageText = "";
+            //String imageText = "";
 
 
             SparseArray<TextBlock> textBlocks = textRecognizer.detect(imageFrame);
@@ -187,10 +189,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
 
             }
-
+            imageText = imageText.toLowerCase();
+            imageText = " The text in front of you reads " + imageText + ".";
             Log.d("text",imageText);
 
-            TextToSpeech textToSpeech = new TextToSpeech(c, new TextToSpeech.OnInitListener() {
+            /*TextToSpeech textToSpeech = new TextToSpeech(c, new TextToSpeech.OnInitListener() {
               @Override
               public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
@@ -199,10 +202,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                   LOGGER.e("onCreate", "Cannot initialise text to speech!");
                 }
               }
-            });
+            });*/
 
-            
-            textToSpeech.speak("The text in front of you says " + imageText + ".", TextToSpeech.QUEUE_FLUSH, null);
+
+            //textToSpeech.speak("The text in front of you says " + imageText + ".", TextToSpeech.QUEUE_FLUSH, null);
 
             final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
 
