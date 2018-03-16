@@ -178,34 +178,14 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     .setBitmap(croppedBitmap)                 // your image bitmap
                     .build();
 
-            //String imageText = "";
-
-
             SparseArray<TextBlock> textBlocks = textRecognizer.detect(imageFrame);
 
             for (int i = 0; i < textBlocks.size(); i++) {
               TextBlock textBlock = textBlocks.get(textBlocks.keyAt(i));
-              imageText = textBlock.getValue();                   // return string
-
-
+              imageText = textBlock.getValue();
             }
             imageText = imageText.toLowerCase();
-            imageText = " The text in front of you reads " + imageText + ".";
             Log.d("text",imageText);
-
-            /*TextToSpeech textToSpeech = new TextToSpeech(c, new TextToSpeech.OnInitListener() {
-              @Override
-              public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                  LOGGER.i("onCreate", "TextToSpeech is initialised");
-                } else {
-                  LOGGER.e("onCreate", "Cannot initialise text to speech!");
-                }
-              }
-            });*/
-
-
-            //textToSpeech.speak("The text in front of you says " + imageText + ".", TextToSpeech.QUEUE_FLUSH, null);
 
             final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
 

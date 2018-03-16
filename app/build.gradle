@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
 project.ext.TMP_DIR = project.buildDir.toString() + '/downloads'
-apply from: "download-models.gradle"
+//apply from: "download-models.gradle"
 
 android {
     compileSdkVersion 26

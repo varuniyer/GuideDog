@@ -97,8 +97,6 @@ public abstract class CameraActivity extends Activity
 
     private TextToSpeech textToSpeech;
 
-    private String imageText ="";
-
 
     SurfaceView cameraView;
     TextView textView;
@@ -490,8 +488,8 @@ public abstract class CameraActivity extends Activity
             stringBuilder.append(" Move to the left and keep walking. ");
         }
 
-        if(imageText.length() > 0){
-            stringBuilder.append(imageText);
+        if(DetectorActivity.imageText.length() > 0){
+            stringBuilder.append("The text in front of you reads " + DetectorActivity.imageText + ".");
         }
 
         boolean time = true;
