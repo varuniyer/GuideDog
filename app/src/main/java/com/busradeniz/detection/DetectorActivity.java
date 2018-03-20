@@ -4,8 +4,10 @@ package com.busradeniz.detection;
  * Created by Shardool and Varun on 2/25/2018.
  */
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -25,15 +27,21 @@ import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.services.rekognition.model.Attribute;
+import com.amazonaws.services.rekognition.model.CompareFacesMatch;
+import com.amazonaws.services.rekognition.model.CompareFacesRequest;
+import com.amazonaws.services.rekognition.model.CompareFacesResult;
 import com.amazonaws.services.rekognition.model.DetectFacesRequest;
+import com.amazonaws.services.rekognition.model.DetectFacesResult;
 import com.amazonaws.services.rekognition.model.DetectLabelsRequest;
 import com.amazonaws.services.rekognition.model.Image;
 import com.amazonaws.services.rekognition.model.S3Object;
+import com.amazonaws.util.IOUtils;
 import com.google.android.gms.vision.face.Face;
 
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import com.busradeniz.detection.env.BorderedText;
@@ -48,6 +56,8 @@ import com.google.android.gms.vision.text.TextRecognizer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -216,16 +226,32 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
             ByteBuffer buffer = ByteBuffer.allocate(croppedBitmap.getByteCount()); //Create a new buffer
             croppedBitmap.copyPixelsToBuffer(buffer); //Move the byte data to the buffer
-
-            Image image = new Image();
-            DetectFacesRequest detectFaceRequest = new DetectFacesRequest()
+            /*DetectFacesRequest detectFaceRequest = new DetectFacesRequest()
                     .withAttributes(Attribute.ALL.toString())
-                    .withImage(image.withBytes(buffer));
+                    .withImage(image.withBytes(buffer)); */
 
+            AssetManager am = getResources().getAssets();
+            try {
+              File dhruv = new File("/sdcard/temp/dhruv.jpg");
+              InputStream inputStream = new FileInputStream(dhruv.getAbsolutePath().toString());
+              ByteBuffer byteBuffer = ByteBuffer.wrap(IOUtils.toByteArray(inputStream));
+              Log.d("lol", Arrays.toString(byteBuffer.array()));
+              Image image = new Image();
+              Image image2 = new Image();
+              image.withBytes(buffer);
+              image2.withBytes(byteBuffer);
+              CompareFacesRequest compare = new CompareFacesRequest();
+              compare.withSourceImage(image).setSourceImage(image);
+              compare.withTargetImage(image2).setTargetImage(image2);
+              CompareFacesResult result = client.compareFaces(compare);
+              result.getFaceMatches();
+              /*for(CompareFacesMatch match: matches) {
+                Log.d("match", match.getSimilarity() + "");
+              }*/
+            } catch (Exception e) {
+              Log.d("lol", e.getMessage());
 
-
-
-
+            }
 
             final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
 
@@ -259,6 +285,16 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
           }
         });
   }
+
+  private byte[] getBytesFromBitmapChunk(Bitmap bitmap)
+  {
+    int bitmapSize = bitmap.getRowBytes() * bitmap.getHeight();
+    ByteBuffer byteBuffer = ByteBuffer.allocate(bitmapSize);
+    bitmap.copyPixelsToBuffer(byteBuffer);
+    byteBuffer.rewind();
+    return byteBuffer.array();
+  }
+
 
   @Override
   protected int getLayoutId() {
