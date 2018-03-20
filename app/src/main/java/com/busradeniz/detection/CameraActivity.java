@@ -112,8 +112,6 @@ public abstract class CameraActivity extends Activity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_camera);
 
-
-
         bl = new cBluetooth(this, mHandler);
         bl.checkBTState();
         BT_is_Connect = bl.BT_Connect("00:14:03:06:47:61", true);

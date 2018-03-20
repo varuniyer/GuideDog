@@ -15,13 +15,24 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.ImageReader.OnImageAvailableListener;
 import android.speech.tts.TextToSpeech;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseArray;
 import android.util.TypedValue;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.services.rekognition.model.Attribute;
+import com.amazonaws.services.rekognition.model.DetectFacesRequest;
+import com.amazonaws.services.rekognition.model.DetectLabelsRequest;
+import com.amazonaws.services.rekognition.model.Image;
+import com.amazonaws.services.rekognition.model.S3Object;
+import com.google.android.gms.vision.face.Face;
 
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,12 +41,20 @@ import com.busradeniz.detection.env.ImageUtils;
 import com.busradeniz.detection.env.Logger;
 import com.busradeniz.detection.tracking.MultiBoxTracker;
 import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.rekognition.*;
+
 
 
 public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
@@ -77,7 +96,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   public Context c;
 
   public static String imageText = "";
-
+  public static String personName ="";
   @Override
   public void onPreviewSizeChosen(final Size size, final int rotation) {
     final float textSizePx =
@@ -186,6 +205,27 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             }
             imageText = imageText.toLowerCase();
             Log.d("text",imageText);
+
+            CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                    getApplicationContext(), // Context
+                    "us-east-1:9644ce94-2c22-4537-a925-41ce22881372", // Identity Pool ID
+                    Regions.US_EAST_1 // Region
+            );
+
+            AmazonRekognitionClient client = new AmazonRekognitionClient(credentialsProvider);
+
+            ByteBuffer buffer = ByteBuffer.allocate(croppedBitmap.getByteCount()); //Create a new buffer
+            croppedBitmap.copyPixelsToBuffer(buffer); //Move the byte data to the buffer
+
+            Image image = new Image();
+            DetectFacesRequest detectFaceRequest = new DetectFacesRequest()
+                    .withAttributes(Attribute.ALL.toString())
+                    .withImage(image.withBytes(buffer));
+
+
+
+
+
 
             final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
 

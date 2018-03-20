@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('aws-android-sdk-mobile-client-2.6.17.aar'))
