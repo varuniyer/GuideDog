@@ -101,7 +101,7 @@ public abstract class CameraActivity extends Activity
     protected int previewHeight = 0;
     private cBluetooth bl = null;
     private boolean BT_is_Connect = false;
-    protected static String distance = "Zero";
+    protected static String distance = "0";
     private Runnable postInferenceCallback;
     private Runnable imageConverter;
 
@@ -571,6 +571,7 @@ public abstract class CameraActivity extends Activity
         if(distance.length() > 0){
             Log.d("Distance:",distance);
             String str = distance.split("\r\n")[0].split(" ")[0];
+
             int cm = Integer.parseInt(str);
             Log.d("meter",cm + "");
             double meters = (cm + 0.0)/100.0;
