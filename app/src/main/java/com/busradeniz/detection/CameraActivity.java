@@ -14,6 +14,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Camera;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
@@ -30,6 +33,7 @@ import android.os.Message;
 import android.os.Trace;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -40,6 +44,11 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import com.busradeniz.detection.AzureHelper.CreatePersonForGroup;
+import com.busradeniz.detection.AzureHelper.CreatePersonGroup;
+import com.busradeniz.detection.AzureHelper.TrainPersonGroup;
+import com.busradeniz.detection.AzureHelper.UploadPersonFace;
 import com.busradeniz.detection.env.ImageUtils;
 import com.busradeniz.detection.env.Logger;
 import java.nio.ByteBuffer;
@@ -56,6 +65,8 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.microsoft.projectoxford.face.contract.AddPersistedFaceResult;
+
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -90,8 +101,8 @@ public abstract class CameraActivity extends Activity
     protected int previewHeight = 0;
     private cBluetooth bl = null;
     private boolean BT_is_Connect = false;
-    protected static String distance = "";
-
+    protected static String distance = "Zero";
+    protected static double meters = 0;
     private Runnable postInferenceCallback;
     private Runnable imageConverter;
 
@@ -134,8 +145,76 @@ public abstract class CameraActivity extends Activity
             }
         });
 
+        /*new CreatePersonGroup(new CreatePersonGroup.AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+            }
+        }).execute("people");
+        createPersonForGroup("people", "Dhruv");
+        createPersonForGroup("people", "Shardool");
+        createPersonForGroup("people", "Achintya");
+
+        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Achintya1)), "people", "Achintya");
+        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Achintya2)), "people", "Achintya");
+        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Achintya3)), "people", "Achintya");
+        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Dhruv1)), "people", "Dhruv");
+        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Dhruv2)), "people", "Dhruv");
+        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Dhruv3)), "people", "Dhruv");
+        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Shardool1)), "people", "Shardool");
+        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Shardool2)), "people", "Shardool");
+        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Shardool3)), "people", "Shardool");
+
+        trainPersonGroup("people"); */
+
     }
 
+    public void trainPersonGroup(String group) {
+        new TrainPersonGroup(new TrainPersonGroup.AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+
+            }
+        }).execute(group);
+    }
+
+    public void uploadPersonFace(Bitmap bitmap, String group, String name) {
+        new UploadPersonFace(bitmap, new UploadPersonFace.AsyncResponse() {
+            @Override
+            public void processFinish(AddPersistedFaceResult output) {
+
+            }
+        }).execute(group, name);
+    }
+
+    public void createPersonForGroup(String group, String person) {
+        new CreatePersonForGroup(new CreatePersonForGroup.AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+            }
+        }).execute(group, person);
+    }
+
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if(bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
 
 
     protected int[] getRgbBytes() {
@@ -160,7 +239,7 @@ public abstract class CameraActivity extends Activity
             rgbBytes = new int[previewWidth * previewHeight];
         }
         try {
-            final Image image = reader.acquireLatestImage();
+            final android.media.Image image = reader.acquireLatestImage();
 
             if (image == null) {
                 return;
@@ -443,9 +522,14 @@ public abstract class CameraActivity extends Activity
         final double previewArea = previewWidth * previewHeight;
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(distance + " ");
+
+        String title = "";
         for (int i = 0; i < currentRecognitions.size(); i++) {
             Classifier.Recognition recognition = currentRecognitions.get(i);
+            title = recognition.getTitle();
+            if(recognition.getTitle().equals("person")) {
+
+            }
             if(recognition.getTitle().equals("surfboard")){
                 stringBuilder.append("table");
             }else{
@@ -457,19 +541,30 @@ public abstract class CameraActivity extends Activity
             double objArea = recognition.getLocation().width() * recognition.getLocation().height();
 
             if (objArea > previewArea / 2) {
-                stringBuilder.append(" in front of you ");
+                if(meters <=1){
+                    stringBuilder.append(" one meter in front of you ");
+                }else{
+                    stringBuilder.append(distance  + " meters in front of you ");
+                }
             } else {
-
                 left = false;
                 right = false;
                 if (start > letStart && end < leftFinish) {
+                    if(meters <=1){
+                        stringBuilder.append("1 meter ");
+                    }else{
+                        stringBuilder.append(meters + "meters ");
+                    }
                     stringBuilder.append(" on the right ");
                     right = true;
                 } else if (start > rightStart && end < rightFinish) {
+                    if(meters <=1){
+                        stringBuilder.append("1 meter ");
+                    }else{
+                        stringBuilder.append(meters + "meters ");
+                    }
                     stringBuilder.append(" on the left ");
                     left = true;
-                } else {
-                    stringBuilder.append(" a few meters in front of you ");
                 }
             }
 
@@ -477,17 +572,30 @@ public abstract class CameraActivity extends Activity
                 stringBuilder.append(" and ");
             }
         }
+        double steps = 0;
         stringBuilder.append(" detected.");
         if(left){
-            stringBuilder.append(" Move to the right and keep walking. ");
+            steps = meters * 1.31;
+            String slight = "";
+            if(meters <= 1){
+                slight = "slight";
+            }
+            stringBuilder.append(" Move " + (int) steps + " steps to the " + slight + " right to move past the " + title + " and continue walking");
+            left = false;
         }
 
         if(right){
-            stringBuilder.append(" Move to the left and keep walking. ");
+            steps = meters * 1.31;
+            String slight = "";
+            if(meters > 1){
+                slight = "slight";
+            }
+            stringBuilder.append(" Move " + (int) steps + " steps to the " + slight + "  left to move past the " + title + " and continue walking");
+            right = false;
         }
 
         if(DetectorActivity.imageText.length() > 0){
-            stringBuilder.append("The text in front of you reads " + DetectorActivity.imageText + ".");
+            stringBuilder.append("  The text in front of you reads " + DetectorActivity.imageText + ".");
         }
 
         boolean time = true;
@@ -496,8 +604,6 @@ public abstract class CameraActivity extends Activity
         Log.d("TIME", str);
         Scanner scan = new Scanner(str);
         String[] arr = str.split(" ",6);
-
-
 
         if(stringBuilder.toString().contains("clock")){
             stringBuilder.append(" The time is " + arr[3]  +".");
@@ -551,6 +657,7 @@ public abstract class CameraActivity extends Activity
                         break;
                     case cBluetooth.RECIEVE_MESSAGE:
                         distance = new String((byte[]) msg.obj, 0, msg.arg1);
+                        meters = Integer.parseInt(distance);
                         Log.d("distance", distance);
                         break;
                 }

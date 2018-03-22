@@ -46,9 +46,10 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile ('com.amazonaws:aws-android-sdk-mobile-client:2.6.+@aar') { transitive = true; }
+    compile('com.amazonaws:aws-android-sdk-mobile-client:2.6.+@aar') { transitive = true; }
     compile 'com.amazonaws:aws-android-sdk-core:2.6.17'
     compile 'com.amazonaws:aws-android-sdk-s3:2.6.17'
     compile 'com.amazonaws:aws-android-sdk-ddb:2.6.17'
     compile 'com.amazonaws:aws-android-sdk-rekognition:2.6.17'
+    compile 'com.microsoft.projectoxford:face:1.4.1'
 }
