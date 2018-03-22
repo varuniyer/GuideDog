@@ -102,7 +102,6 @@ public abstract class CameraActivity extends Activity
     private cBluetooth bl = null;
     private boolean BT_is_Connect = false;
     protected static String distance = "Zero";
-    protected static double meters = 0;
     private Runnable postInferenceCallback;
     private Runnable imageConverter;
 
@@ -125,7 +124,7 @@ public abstract class CameraActivity extends Activity
 
         bl = new cBluetooth(this, mHandler);
         bl.checkBTState();
-        BT_is_Connect = bl.BT_Connect("00:14:03:06:47:61", true);
+        BT_is_Connect = bl.BT_Connect("98:D3:61:FD:34:F1", true);
         Log.d("Connected?", BT_is_Connect + "");
 
         if (hasPermission()) {
@@ -541,29 +540,24 @@ public abstract class CameraActivity extends Activity
             double objArea = recognition.getLocation().width() * recognition.getLocation().height();
 
             if (objArea > previewArea / 2) {
-                if(meters <=1){
-                    stringBuilder.append(" one meter in front of you ");
-                }else{
-                    stringBuilder.append(distance  + " meters in front of you ");
-                }
+                /*if(meters <=1){
+                        stringBuilder.append("1 meter ");
+                    }else{
+                        stringBuilder.append(meters + "meters ");
+                    }*/
+                stringBuilder.append(distance + "centimeters in front of you");
             } else {
                 left = false;
                 right = false;
                 if (start > letStart && end < leftFinish) {
-                    if(meters <=1){
-                        stringBuilder.append("1 meter ");
-                    }else{
-                        stringBuilder.append(meters + "meters ");
+                    if(distance.length() > 0){
+                        stringBuilder.append(" " + distance + "centimeters on the right ");
                     }
-                    stringBuilder.append(" on the right ");
                     right = true;
                 } else if (start > rightStart && end < rightFinish) {
-                    if(meters <=1){
-                        stringBuilder.append("1 meter ");
-                    }else{
-                        stringBuilder.append(meters + "meters ");
+                    if(distance.length() > 0){
+                        stringBuilder.append(" " + distance + "centimeters on the left ");
                     }
-                    stringBuilder.append(" on the left ");
                     left = true;
                 }
             }
@@ -574,25 +568,33 @@ public abstract class CameraActivity extends Activity
         }
         double steps = 0;
         stringBuilder.append(" detected.");
-        if(left){
-            steps = meters * 1.31;
-            String slight = "";
-            if(meters <= 1){
-                slight = "slight";
+        if(distance.length() > 0){
+            Log.d("Distance:",distance);
+            String str = distance.split("\r\n")[0].split(" ")[0];
+            int cm = Integer.parseInt(str);
+            Log.d("meter",cm + "");
+            double meters = (cm + 0.0)/100.0;
+            if(left){
+                steps = meters * 1.31;
+                String slight = "";
+                if(meters <= 1){
+                    slight = "slight";
+                }
+                stringBuilder.append(" Move " + (int)steps + " steps to the " + slight + " right to move past the " + title + " and continue walking");
+                left = false;
             }
-            stringBuilder.append(" Move " + (int) steps + " steps to the " + slight + " right to move past the " + title + " and continue walking");
-            left = false;
+
+            if(right){
+                steps = meters * 1.31;
+                String slight = "";
+                if(meters > 1){
+                    slight = "slight";
+                }
+                stringBuilder.append(" Move " + (int) steps + " steps to the " + slight + "  left to move past the " + title + " and continue walking");
+                right = false;
+            }
         }
 
-        if(right){
-            steps = meters * 1.31;
-            String slight = "";
-            if(meters > 1){
-                slight = "slight";
-            }
-            stringBuilder.append(" Move " + (int) steps + " steps to the " + slight + "  left to move past the " + title + " and continue walking");
-            right = false;
-        }
 
         if(DetectorActivity.imageText.length() > 0){
             stringBuilder.append("  The text in front of you reads " + DetectorActivity.imageText + ".");
@@ -657,7 +659,8 @@ public abstract class CameraActivity extends Activity
                         break;
                     case cBluetooth.RECIEVE_MESSAGE:
                         distance = new String((byte[]) msg.obj, 0, msg.arg1);
-                        meters = Integer.parseInt(distance);
+                        //double m = Integer.parseInt(distance) + 0.0;
+                        //meters = m/100.0;
                         Log.d("distance", distance);
                         break;
                 }

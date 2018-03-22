@@ -204,7 +204,7 @@ public class cBluetooth{
                 } catch (IOException e) {
                     Log.d("here", "here");
                 }}
-            }, 0, 1000);//put here time 1000 milliseconds=1 second
+            }, 0, 1500);//put here time 1000 milliseconds=1 second
         }
     }
 }
