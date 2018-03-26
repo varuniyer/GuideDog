@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/aws-android-sdk-mobile-client-2.6.17" />
+            <option value="$PROJECT_DIR$/pocketsphinx-android-5prealpha-release" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

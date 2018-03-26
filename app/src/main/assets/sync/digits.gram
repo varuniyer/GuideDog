@@ -2,16 +2,10 @@
 
 grammar digits;
 
-<digit> = oh    |
-          zero  |
-          one   |
-          two   |
-          three |
-          four  |
-          five  |
-          six   |
-          seven |
-          eight |
-          nine  ;
+<digit> = hey guide dog    |
+          to my left   |
+          to my right   |
+          front of me   |
+          near me  ;
 
 public <digits> = <digit>+;

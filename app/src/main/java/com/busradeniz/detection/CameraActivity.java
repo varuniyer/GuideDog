@@ -97,15 +97,16 @@ public abstract class CameraActivity extends Activity
         implements OnImageAvailableListener, RecognitionListener {
 
     /* Named searches allow to quickly reconfigure the decoder */
-    private static final String KWS_SEARCH = "wakeup";
-    private static final String FORECAST_SEARCH = "left";
-    private static final String DIGITS_SEARCH = "front";
-    private static final String PHONE_SEARCH = "right";
-    private static final String MENU_SEARCH = "menu";
 
+    private static final String KWS_SEARCH = "hey guide dog";
+    private static final String FORECAST_SEARCH = "to my left";
+    private static final String DIGITS_SEARCH = "front of me";
+    private static final String PHONE_SEARCH = "to my right";
+    private static final String MENU_SEARCH = "near me";
     /* Keyword we are looking for to activate menu */
     private static final String KEYPHRASE = "hey guide dog";
-
+    private static String arr[] = {KWS_SEARCH,FORECAST_SEARCH,DIGITS_SEARCH,PHONE_SEARCH,MENU_SEARCH};
+    private static int index = 0;
     /* Used to handle permission request */
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
 
@@ -194,7 +195,14 @@ public abstract class CameraActivity extends Activity
         // Recognizer initialization is a time-consuming and it involves IO,
         // so we execute it in async task
         a = this;
-        new SetupTask(this).execute();
+        try {
+            Assets assets = new Assets(CameraActivity.this);
+            File assetDir = assets.syncAssets();
+            setupRecognizer(assetDir);
+        } catch(IOException io){}
+
+        recognizer.stop();
+        recognizer.startListening(DIGITS_SEARCH);
     }
 
     private static class SetupTask extends AsyncTask<Void, Void, Exception> {
@@ -221,7 +229,7 @@ public abstract class CameraActivity extends Activity
                  //       .setText("Failed to init recognizer " + result);
                 Log.i("Failed to init recognizer",result.toString());
             } else {
-               activityReference.get().switchSearch(KWS_SEARCH);
+               activityReference.get().switchSearch(DIGITS_SEARCH);
             }
         }
     }
@@ -235,7 +243,7 @@ public abstract class CameraActivity extends Activity
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Recognizer initialization is a time-consuming and it involves IO,
                 // so we execute it in async task
-                new SetupTask(this).execute();
+                //new SetupTask(this).execute();
             } else {
                 finish();
             }
@@ -264,16 +272,20 @@ public abstract class CameraActivity extends Activity
 
         String text = hypothesis.getHypstr();
         Log.i("converted text", text);
-        if (text.equals(KEYPHRASE))
-            switchSearch(KWS_SEARCH);
-        else if (text.equals(DIGITS_SEARCH))
+        //index++;
+        //if(index == arr.length) index = 0;
+        Log.i("Array Val",arr[index]);
+      ////  switchSearch(arr[index]);
+        /*if (text.equals(KEYPHRASE))
+            switchSearch(MENU_SEARCH);
+        else if (text.equals(_SEARCH))
             switchSearch(DIGITS_SEARCH);
         else if (text.equals(PHONE_SEARCH))
             switchSearch(PHONE_SEARCH);
         else if (text.equals(FORECAST_SEARCH))
             switchSearch(FORECAST_SEARCH);
-        else Log.i("partial text", text);
-        switchSearch(KWS_SEARCH);
+        else Log.i("partial text", text);*/
+        //switchSearch(DIGITS_SEARCH);
             //((TextView) findViewById(R.id.result_text)).setText(text);
     }
 
@@ -286,11 +298,14 @@ public abstract class CameraActivity extends Activity
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
             Log.i("result text", text);
-            if(text.trim().equals("hey guide dog")) {
+
+            boolean stuff = false;
+            for(String s : arr) if(s.equals(text.trim())) stuff = true;
+            if(text.equals("dog")) {
                 textToSpeech.speak("Guide Dog is listening", TextToSpeech.QUEUE_FLUSH, null);
             }
+            else question = text;
             makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-            question = text;
             //new SetupTask(a).execute();
         }
     }
@@ -304,19 +319,22 @@ public abstract class CameraActivity extends Activity
      */
     @Override
     public void onEndOfSpeech() {
-        if (!recognizer.getSearchName().equals(KWS_SEARCH))
-            switchSearch(KWS_SEARCH);
+        index++;
+        if(arr.length == index) index = 0;
+        Log.i("intended word",arr[index]);
+        recognizer.stop();
+        recognizer.startListening(DIGITS_SEARCH);
     }
 
     private void switchSearch(String searchName) {
-        recognizer.stop();
+        //recognizer.stop();
 
         // If we are not spotting, start listening with timeout (10000 ms or 10 seconds).
-        if (searchName.equals(KWS_SEARCH))
-            recognizer.startListening(searchName);
-        else
-            recognizer.startListening(searchName, 10000);
-
+        //if (searchName.equals(KWS_SEARCH))
+         //   recognizer.startListening(searchName);
+       // else
+           //for(String s : arr) recognizer.startListening(s);
+        //recognizer.startListening(DIGITS_SEARCH);
         String caption = getResources().getString(captions.get(searchName));
         Log.i("caption", caption);
         //((TextView) findViewById(R.id.caption_text)).setText(caption);
@@ -340,14 +358,11 @@ public abstract class CameraActivity extends Activity
          */
 
         // Create keyword-activation search.
-        recognizer.addKeyphraseSearch(KWS_SEARCH, KEYPHRASE);
-        recognizer.addKeyphraseSearch(KWS_SEARCH, "to my left");
-        recognizer.addKeyphraseSearch(KWS_SEARCH, "to my right");
-        recognizer.addKeyphraseSearch(KWS_SEARCH, "front of me");
-        recognizer.addKeyphraseSearch(KWS_SEARCH, "near me");
+        File digitsGrammar = new File(assetsDir,"menu.gram");
+        recognizer.addKeywordSearch(DIGITS_SEARCH, digitsGrammar);
 
 
-        // Create grammar-based search for selection between demos
+       /* // Create grammar-based search for selection between demos
         File menuGrammar = new File(assetsDir, "menu.gram");
         recognizer.addGrammarSearch(MENU_SEARCH, menuGrammar);
 
@@ -361,7 +376,7 @@ public abstract class CameraActivity extends Activity
 
         // Phonetic search
         File phoneticModel = new File(assetsDir, "en-phone.dmp");
-        recognizer.addAllphoneSearch(PHONE_SEARCH, phoneticModel);
+        recognizer.addAllphoneSearch(PHONE_SEARCH, phoneticModel);*/
     }
 
     @Override
@@ -372,7 +387,9 @@ public abstract class CameraActivity extends Activity
 
     @Override
     public void onTimeout() {
-        switchSearch(KWS_SEARCH);
+        //index++;
+        //if(index == arr.length) index= 0;
+        //switchSearch(arr[index]);
     }
 
     public void trainPersonGroup(String group) {
@@ -729,7 +746,7 @@ public abstract class CameraActivity extends Activity
         final double previewArea = previewWidth * previewHeight;
 
         StringBuilder stringBuilder = new StringBuilder();
-
+        stringBuilder.append("There is a ");
         String title = "";
         for (int i = 0; i < currentRecognitions.size(); i++) {
             Classifier.Recognition recognition = currentRecognitions.get(i);
@@ -753,18 +770,18 @@ public abstract class CameraActivity extends Activity
                     }else{
                         stringBuilder.append(meters + "meters ");
                     }*/
-                stringBuilder.append(distance + "centimeters in front of you");
+                stringBuilder.append(distance + " centimeters in front of you");
             } else {
                 left = false;
                 right = false;
                 if (start > letStart && end < leftFinish) {
                     if(distance.length() > 0){
-                        stringBuilder.append(" " + distance + "centimeters on the right ");
+                        stringBuilder.append(" " + distance + " centimeters on the right ");
                     }
                     right = true;
                 } else if (start > rightStart && end < rightFinish) {
                     if(distance.length() > 0){
-                        stringBuilder.append(" " + distance + "centimeters on the left ");
+                        stringBuilder.append(" " + distance + " centimeters on the left ");
                     }
                     left = true;
                 }
@@ -775,7 +792,7 @@ public abstract class CameraActivity extends Activity
             }
         }
         double steps = 0;
-        stringBuilder.append(" detected.");
+        stringBuilder.append(".");
         if(distance.length() > 0){
             Log.d("Distance:",distance);
             String str = distance.split("\r\n")[0].split(" ")[0];
@@ -783,7 +800,7 @@ public abstract class CameraActivity extends Activity
             int cm = Integer.parseInt(str);
             Log.d("meter",cm + "");
             double meters = (cm + 0.0)/100.0;
-            if(left){
+            /*if(left){
                 steps = meters * 1.31;
                 String slight = "";
                 if(meters <= 1){
@@ -801,7 +818,7 @@ public abstract class CameraActivity extends Activity
                 }
                 stringBuilder.append(" Move " + (int) steps + " steps to the " + slight + "  left to move past the " + title + " and continue walking");
                 right = false;
-            }
+            }*/
         }
 
 
@@ -825,13 +842,32 @@ public abstract class CameraActivity extends Activity
 
         Log.i("string", stringBuilder.toString());
         if(question!= null) Log.i("question", question);
-        if(question != null && (question.contains("left") || question.contains("right")
-                || question.contains("front") || question.contains("near"))) {
-            textToSpeech.speak(stringBuilder.toString(), TextToSpeech.QUEUE_FLUSH, null);
+        if(question != null) {
+            String[] occurrences = question.split(" ");
+            boolean near = question.contains("near");
+            boolean front = question.contains("front");
+            boolean left = question.contains("left");
+            boolean right = question.contains("right");
+            if(near || front) {
+                left = false;
+                right = false;
+            }
+            String[] sentences = stringBuilder.toString().split("centimeters");
+            for(String s : sentences) Log.i("sentence", s);
+            String newStr = "";
+            for(int i = 1; i < sentences.length; i+=2) {
+                for (int j = 0; j < occurrences.length; j++) {
+                    if ((sentences[i - 1].contains(occurrences[j]) || sentences[i].contains(occurrences[j]))
+                            && (!left || sentences[i - 1].contains("left") || sentences[i].contains("left")) && (!right || sentences[i - 1].contains("right") || sentences[i].contains("right"))) {
+                        newStr += sentences[i - 1] + "centimeters" + sentences[i];
+                        break;
+                    }
+                }
+            }
+            if(newStr.equals("")) newStr = "There are no relevant objects in your view.";
+            textToSpeech.speak(newStr, TextToSpeech.QUEUE_FLUSH, null);
             question = null;
         }
-
-
     }
 
     protected abstract void processImage();

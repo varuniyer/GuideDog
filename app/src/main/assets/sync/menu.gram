@@ -1,5 +1,7 @@
-#JSGF V1.0;
-
-grammar menu;
-
-public <item> = digits | forecast | phones;
+near /1e-1/
+front /1e-1/
+dog /1e-1/
+left /1e-1/
+right /1e-1/
+chair /1e-1/
+person /1e-1/
