@@ -102,7 +102,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
   private static final int TF_OD_API_INPUT_SIZE = 300;
   private static final String TF_OD_API_MODEL_FILE =
-      "file:///android_asset/ssd_mobilenet_v1_android_export.pb";
+          "file:///android_asset/ssd_mobilenet_v1_android_export.pb";
   private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/coco_labels_list.txt";
 
   // Minimum detection confidence to track a detection.
@@ -144,8 +144,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   @Override
   public void onPreviewSizeChosen(final Size size, final int rotation) {
     final float textSizePx =
-        TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, getResources().getDisplayMetrics());
+            TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, getResources().getDisplayMetrics());
     borderedText = new BorderedText(textSizePx);
     borderedText.setTypeface(Typeface.MONOSPACE);
 
@@ -155,13 +155,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     try {
       detector = TensorFlowObjectDetectionAPIModel.create(
-          getAssets(), TF_OD_API_MODEL_FILE, TF_OD_API_LABELS_FILE, TF_OD_API_INPUT_SIZE);
+              getAssets(), TF_OD_API_MODEL_FILE, TF_OD_API_LABELS_FILE, TF_OD_API_INPUT_SIZE);
       cropSize = TF_OD_API_INPUT_SIZE;
     } catch (final IOException e) {
       LOGGER.e("Exception initializing classifier!", e);
       Toast toast =
-          Toast.makeText(
-              getApplicationContext(), "Classifier could not be initialized", Toast.LENGTH_SHORT);
+              Toast.makeText(
+                      getApplicationContext(), "Classifier could not be initialized", Toast.LENGTH_SHORT);
       toast.show();
       finish();
     }
@@ -177,22 +177,22 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     croppedBitmap = Bitmap.createBitmap(cropSize, cropSize, Config.ARGB_8888);
 
     frameToCropTransform =
-        ImageUtils.getTransformationMatrix(
-            previewWidth, previewHeight,
-            cropSize, cropSize,
-            sensorOrientation, false);
+            ImageUtils.getTransformationMatrix(
+                    previewWidth, previewHeight,
+                    cropSize, cropSize,
+                    sensorOrientation, false);
 
     cropToFrameTransform = new Matrix();
     frameToCropTransform.invert(cropToFrameTransform);
 
     trackingOverlay = findViewById(R.id.tracking_overlay);
     trackingOverlay.addCallback(
-        new OverlayView.DrawCallback() {
-          @Override
-          public void drawCallback(final Canvas canvas) {
-            tracker.draw(canvas);
-          }
-        });
+            new OverlayView.DrawCallback() {
+              @Override
+              public void drawCallback(final Canvas canvas) {
+                tracker.draw(canvas);
+              }
+            });
   }
 
   OverlayView trackingOverlay;
@@ -203,9 +203,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     final long currTimestamp = timestamp;
     byte[] originalLuminance = getLuminance();
     tracker.onFrame(
-        previewWidth,
-        previewHeight,
-        sensorOrientation);
+            previewWidth,
+            previewHeight,
+            sensorOrientation);
     trackingOverlay.postInvalidate();
 
     // No mutex needed as this method is not reentrant.
@@ -228,45 +228,45 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     canvas.drawBitmap(rgbFrameBitmap, frameToCropTransform, null);
     c = getApplicationContext();
     runInBackground(
-        new Runnable() {
-          @Override
-          public void run() {
-            LOGGER.i("Running detection on image " + currTimestamp);
-            imageText = "";
-            //TODO: ADD BITMAP -> SPEECH HERE
-            TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+            new Runnable() {
+              @Override
+              public void run() {
+                LOGGER.i("Running detection on image " + currTimestamp);
+                imageText = "";
+                //TODO: ADD BITMAP -> SPEECH HERE
+                TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
 
-            Frame imageFrame = new Frame.Builder()
+                Frame imageFrame = new Frame.Builder()
 
-                    .setBitmap(croppedBitmap)                 // your image bitmap
-                    .build();
+                        .setBitmap(croppedBitmap)                 // your image bitmap
+                        .build();
 
-            SparseArray<TextBlock> textBlocks = textRecognizer.detect(imageFrame);
+                SparseArray<TextBlock> textBlocks = textRecognizer.detect(imageFrame);
 
-            for (int i = 0; i < textBlocks.size(); i++) {
-              TextBlock textBlock = textBlocks.get(textBlocks.keyAt(i));
-              imageText = textBlock.getValue();
-            }
-            imageText = imageText.toLowerCase();
-            Log.d("text",imageText);
+                for (int i = 0; i < textBlocks.size(); i++) {
+                  TextBlock textBlock = textBlocks.get(textBlocks.keyAt(i));
+                  imageText = textBlock.getValue();
+                }
+                imageText = imageText.toLowerCase();
+                Log.d("text",imageText);
 
-            //FaceServiceClient faceServiceClient = new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "86fab03db5424440ae3e31ba2011d96d");
-            final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
+                //FaceServiceClient faceServiceClient = new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "86fab03db5424440ae3e31ba2011d96d");
+                final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
 
-            cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
-            final Canvas canvas = new Canvas(cropCopyBitmap);
-            final Paint paint = new Paint();
-            paint.setColor(Color.RED);
-            paint.setStyle(Style.STROKE);
-            paint.setStrokeWidth(2.0f);
+                cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
+                final Canvas canvas = new Canvas(cropCopyBitmap);
+                final Paint paint = new Paint();
+                paint.setColor(Color.RED);
+                paint.setStyle(Style.STROKE);
+                paint.setStrokeWidth(2.0f);
 
-              final List<Classifier.Recognition> mappedRecognitions =
-                    new LinkedList<>();
+                final List<Classifier.Recognition> mappedRecognitions =
+                        new LinkedList<>();
 
-            for (final Classifier.Recognition result : results) {
-              final RectF location = result.getLocation();
-              if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
-                canvas.drawRect(location, paint);
+                for (final Classifier.Recognition result : results) {
+                  final RectF location = result.getLocation();
+                  if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
+                    canvas.drawRect(location, paint);
 
                 /*if(result.getTitle().equals("person")) {
                   File myDir = new File("/sdcard/temp");
@@ -311,19 +311,19 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                   Log.d("test", "person: " + person);
                 }*/
 
-                cropToFrameTransform.mapRect(location);
-                result.setLocation(location);
-                mappedRecognitions.add(result);
+                    cropToFrameTransform.mapRect(location);
+                    result.setLocation(location);
+                    mappedRecognitions.add(result);
+                  }
+                }
+
+                tracker.trackResults(mappedRecognitions);
+                toSpeech(mappedRecognitions);
+                trackingOverlay.postInvalidate();
+
+                computingDetection = false;
               }
-            }
-
-            tracker.trackResults(mappedRecognitions);
-            toSpeech(mappedRecognitions);
-            trackingOverlay.postInvalidate();
-
-            computingDetection = false;
-          }
-        });
+            });
   }
 
   @Override
