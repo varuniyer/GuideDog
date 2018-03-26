@@ -5,6 +5,7 @@
 package com.busradeniz.detection;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
@@ -25,6 +26,7 @@ import android.media.Image;
 import android.media.Image.Plane;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,6 +42,7 @@ import android.view.Surface;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +56,7 @@ import com.busradeniz.detection.env.ImageUtils;
 import com.busradeniz.detection.env.Logger;
 import java.nio.ByteBuffer;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -79,8 +83,35 @@ import android.view.SurfaceView;
 import android.widget.TextView;
 import java.io.IOException;
 
+import edu.cmu.pocketsphinx.Assets;
+import edu.cmu.pocketsphinx.Hypothesis;
+import edu.cmu.pocketsphinx.RecognitionListener;
+import edu.cmu.pocketsphinx.SpeechRecognizer;
+import edu.cmu.pocketsphinx.SpeechRecognizerSetup;
+
+import static android.widget.Toast.makeText;
+
+import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
+
 public abstract class CameraActivity extends Activity
-        implements OnImageAvailableListener {
+        implements OnImageAvailableListener, RecognitionListener {
+
+    /* Named searches allow to quickly reconfigure the decoder */
+    private static final String KWS_SEARCH = "wakeup";
+    private static final String FORECAST_SEARCH = "left";
+    private static final String DIGITS_SEARCH = "front";
+    private static final String PHONE_SEARCH = "right";
+    private static final String MENU_SEARCH = "menu";
+
+    /* Keyword we are looking for to activate menu */
+    private static final String KEYPHRASE = "hey guide dog";
+
+    /* Used to handle permission request */
+    private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
+
+    private SpeechRecognizer recognizer;
+    private HashMap<String, Integer> captions;
+
     private static final Logger LOGGER = new Logger();
 
     private static final int PERMISSIONS_REQUEST = 1;
@@ -106,6 +137,9 @@ public abstract class CameraActivity extends Activity
     private Runnable imageConverter;
 
     private TextToSpeech textToSpeech;
+    private String question;
+
+    private static CameraActivity a;
 
 
     SurfaceView cameraView;
@@ -144,27 +178,201 @@ public abstract class CameraActivity extends Activity
             }
         });
 
-        /*new CreatePersonGroup(new CreatePersonGroup.AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
+        captions = new HashMap<>();
+        captions.put(KWS_SEARCH, R.string.kws_caption);
+        captions.put(MENU_SEARCH, R.string.menu_caption);
+        captions.put(DIGITS_SEARCH, R.string.digits_caption);
+        captions.put(PHONE_SEARCH, R.string.phone_caption);
+        captions.put(FORECAST_SEARCH, R.string.forecast_caption);
+
+        // Check if user has given permission to record audio
+        int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_RECORD_AUDIO);
+            return;
+        }
+        // Recognizer initialization is a time-consuming and it involves IO,
+        // so we execute it in async task
+        a = this;
+        new SetupTask(this).execute();
+    }
+
+    private static class SetupTask extends AsyncTask<Void, Void, Exception> {
+        WeakReference<CameraActivity> activityReference;
+        SetupTask(CameraActivity activity) {
+            this.activityReference = new WeakReference<>(activity);
+        }
+        @Override
+        protected Exception doInBackground(Void... params) {
+            try {
+                Assets assets = new Assets(activityReference.get());
+                File assetDir = assets.syncAssets();
+                activityReference.get().setupRecognizer(assetDir);
+            } catch (IOException e) {
+                return e;
             }
-        }).execute("people");
-        createPersonForGroup("people", "Dhruv");
-        createPersonForGroup("people", "Shardool");
-        createPersonForGroup("people", "Achintya");
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Exception result) {
+            //new SetupTask(a).execute();
+            if (result != null) {
+               // ((TextView) activityReference.get().findViewById(R.id.caption_text))
+                 //       .setText("Failed to init recognizer " + result);
+                Log.i("Failed to init recognizer",result.toString());
+            } else {
+               activityReference.get().switchSearch(KWS_SEARCH);
+            }
+        }
+    }
 
-        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Achintya1)), "people", "Achintya");
-        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Achintya2)), "people", "Achintya");
-        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Achintya3)), "people", "Achintya");
-        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Dhruv1)), "people", "Dhruv");
-        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Dhruv2)), "people", "Dhruv");
-        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Dhruv3)), "people", "Dhruv");
-        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Shardool1)), "people", "Shardool");
-        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Shardool2)), "people", "Shardool");
-        uploadPersonFace(drawableToBitmap(ContextCompat.getDrawable(getApplicationContext(), R.drawable.Shardool3)), "people", "Shardool");
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull  int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        trainPersonGroup("people"); */
+        if (requestCode == PERMISSIONS_REQUEST_RECORD_AUDIO) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Recognizer initialization is a time-consuming and it involves IO,
+                // so we execute it in async task
+                new SetupTask(this).execute();
+            } else {
+                finish();
+            }
+        }
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (recognizer != null) {
+            recognizer.cancel();
+            recognizer.shutdown();
+        }
+    }
+
+    /**
+     * In partial result we get quick updates about current hypothesis. In
+     * keyword spotting mode we can react here, in other modes we need to wait
+     * for final result in onResult.
+     */
+    @Override
+    public void onPartialResult(Hypothesis hypothesis) {
+        if (hypothesis == null)
+            return;
+
+        String text = hypothesis.getHypstr();
+        Log.i("converted text", text);
+        if (text.equals(KEYPHRASE))
+            switchSearch(KWS_SEARCH);
+        else if (text.equals(DIGITS_SEARCH))
+            switchSearch(DIGITS_SEARCH);
+        else if (text.equals(PHONE_SEARCH))
+            switchSearch(PHONE_SEARCH);
+        else if (text.equals(FORECAST_SEARCH))
+            switchSearch(FORECAST_SEARCH);
+        else Log.i("partial text", text);
+        switchSearch(KWS_SEARCH);
+            //((TextView) findViewById(R.id.result_text)).setText(text);
+    }
+
+    /**
+     * This callback is called when we stop the recognizer.
+     */
+    @Override
+    public void onResult(Hypothesis hypothesis) {
+        //((TextView) findViewById(R.id.result_text)).setText("");
+        if (hypothesis != null) {
+            String text = hypothesis.getHypstr();
+            Log.i("result text", text);
+            if(text.trim().equals("hey guide dog")) {
+                textToSpeech.speak("Guide Dog is listening", TextToSpeech.QUEUE_FLUSH, null);
+            }
+            makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+            question = text;
+            //new SetupTask(a).execute();
+        }
+    }
+
+    @Override
+    public void onBeginningOfSpeech() {
+    }
+
+    /**
+     * We stop recognizer here to get a final result
+     */
+    @Override
+    public void onEndOfSpeech() {
+        if (!recognizer.getSearchName().equals(KWS_SEARCH))
+            switchSearch(KWS_SEARCH);
+    }
+
+    private void switchSearch(String searchName) {
+        recognizer.stop();
+
+        // If we are not spotting, start listening with timeout (10000 ms or 10 seconds).
+        if (searchName.equals(KWS_SEARCH))
+            recognizer.startListening(searchName);
+        else
+            recognizer.startListening(searchName, 10000);
+
+        String caption = getResources().getString(captions.get(searchName));
+        Log.i("caption", caption);
+        //((TextView) findViewById(R.id.caption_text)).setText(caption);
+    }
+
+    private void setupRecognizer(File assetsDir) throws IOException {
+        // The recognizer can be configured to perform multiple searches
+        // of different kind and switch between them
+
+        recognizer = SpeechRecognizerSetup.defaultSetup()
+                .setAcousticModel(new File(assetsDir, "en-us-ptm"))
+                .setDictionary(new File(assetsDir, "cmudict-en-us.dict"))
+
+                .setRawLogDir(assetsDir) // To disable logging of raw audio comment out this call (takes a lot of space on the device)
+
+                .getRecognizer();
+        recognizer.addListener(this);
+
+        /* In your application you might not need to add all those searches.
+          They are added here for demonstration. You can leave just one.
+         */
+
+        // Create keyword-activation search.
+        recognizer.addKeyphraseSearch(KWS_SEARCH, KEYPHRASE);
+        recognizer.addKeyphraseSearch(KWS_SEARCH, "to my left");
+        recognizer.addKeyphraseSearch(KWS_SEARCH, "to my right");
+        recognizer.addKeyphraseSearch(KWS_SEARCH, "front of me");
+        recognizer.addKeyphraseSearch(KWS_SEARCH, "near me");
+
+
+        // Create grammar-based search for selection between demos
+        File menuGrammar = new File(assetsDir, "menu.gram");
+        recognizer.addGrammarSearch(MENU_SEARCH, menuGrammar);
+
+        // Create grammar-based search for digit recognition
+        File digitsGrammar = new File(assetsDir, "digits.gram");
+        recognizer.addGrammarSearch(DIGITS_SEARCH, digitsGrammar);
+
+        // Create language model search
+        File languageModel = new File(assetsDir, "weather.dmp");
+        recognizer.addNgramSearch(FORECAST_SEARCH, languageModel);
+
+        // Phonetic search
+        File phoneticModel = new File(assetsDir, "en-phone.dmp");
+        recognizer.addAllphoneSearch(PHONE_SEARCH, phoneticModel);
+    }
+
+    @Override
+    public void onError(Exception error) {
+        Log.i("error",error.getMessage());
+        //((TextView) findViewById(R.id.caption_text)).setText(error.getMessage());
+    }
+
+    @Override
+    public void onTimeout() {
+        switchSearch(KWS_SEARCH);
     }
 
     public void trainPersonGroup(String group) {
@@ -338,11 +546,11 @@ public abstract class CameraActivity extends Activity
         super.onStop();
     }
 
-    @Override
+    /*@Override
     public synchronized void onDestroy() {
         LOGGER.d("onDestroy " + this);
         super.onDestroy();
-    }
+    }*/
 
     protected synchronized void runInBackground(final Runnable r) {
         if (handler != null) {
@@ -350,7 +558,7 @@ public abstract class CameraActivity extends Activity
         }
     }
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(
             final int requestCode, final String[] permissions, final int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST) {
@@ -362,7 +570,7 @@ public abstract class CameraActivity extends Activity
                 requestPermission();
             }
         }
-    }
+    }*/
 
     private boolean hasPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -588,7 +796,7 @@ public abstract class CameraActivity extends Activity
             if(right){
                 steps = meters * 1.31;
                 String slight = "";
-                if(meters > 1){
+                if(meters > 1) {
                     slight = "slight";
                 }
                 stringBuilder.append(" Move " + (int) steps + " steps to the " + slight + "  left to move past the " + title + " and continue walking");
@@ -614,7 +822,14 @@ public abstract class CameraActivity extends Activity
 
         if(DetectorActivity.imageText.length() > 32) stringBuilder.append(DetectorActivity.imageText);
 
-        textToSpeech.speak(stringBuilder.toString(), TextToSpeech.QUEUE_FLUSH, null);
+
+        Log.i("string", stringBuilder.toString());
+        if(question!= null) Log.i("question", question);
+        if(question != null && (question.contains("left") || question.contains("right")
+                || question.contains("front") || question.contains("near"))) {
+            textToSpeech.speak(stringBuilder.toString(), TextToSpeech.QUEUE_FLUSH, null);
+            question = null;
+        }
 
 
     }

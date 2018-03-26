@@ -1,1 +1,1 @@
-include ':app', ':aws-android-sdk-mobile-client-2.6.17'
+include ':app', ':aws-android-sdk-mobile-client-2.6.17', ':pocketsphinx-android-5prealpha-release'

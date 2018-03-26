@@ -3,6 +3,9 @@ apply plugin: 'com.android.application'
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
 project.ext.TMP_DIR = project.buildDir.toString() + '/downloads'
 //apply from: "download-models.gradle"
+ant.importBuild 'assets.xml'
+preBuild.dependsOn(list, checksum)
+clean.dependsOn(clean_assets)
 
 android {
     compileSdkVersion 26
@@ -40,7 +43,8 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     // Tensorflow
     compile 'org.tensorflow:tensorflow-android:+'
-    compile 'com.google.android.gms:play-services-vision:11.8.0'
+    compile 'com.google.android.gms:play-services-vision:10.0.0'
+    compile project(':pocketsphinx-android-5prealpha-release')
     // Test Dependencies
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {

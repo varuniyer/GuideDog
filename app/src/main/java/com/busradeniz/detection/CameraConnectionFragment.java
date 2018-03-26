@@ -56,6 +56,13 @@ import java.util.concurrent.TimeUnit;
 public class CameraConnectionFragment extends Fragment {
   private static final Logger LOGGER = new Logger();
 
+  public CameraConnectionFragment(){
+      this.cameraConnectionCallback = null;
+      this.imageListener = null;
+      this.layout = 0;
+      this.inputSize = null;
+  }
+
   /**
    * The camera preview size will be chosen to be the smallest frame by pixel size capable of
    * containing a DESIRED_SIZE x DESIRED_SIZE square.

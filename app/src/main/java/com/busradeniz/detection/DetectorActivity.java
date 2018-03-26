@@ -37,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.amazonaws.services.rekognition.model.Face;
 import com.busradeniz.detection.AzureHelper.CreatePersonForGroup;
 import com.busradeniz.detection.AzureHelper.CreatePersonGroup;
 import com.busradeniz.detection.env.BorderedText;
@@ -233,7 +234,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
               public void run() {
                 LOGGER.i("Running detection on image " + currTimestamp);
                 imageText = "";
-                //TODO: ADD BITMAP -> SPEECH HERE
+
                 TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
 
                 Frame imageFrame = new Frame.Builder()
@@ -250,7 +251,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 imageText = imageText.toLowerCase();
                 Log.d("text",imageText);
 
-                //FaceServiceClient faceServiceClient = new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "86fab03db5424440ae3e31ba2011d96d");
                 final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
 
                 cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
@@ -268,48 +268,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                   if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
                     canvas.drawRect(location, paint);
 
-                /*if(result.getTitle().equals("person")) {
-                  File myDir = new File("/sdcard/temp");
-                  myDir.mkdirs();
-                  File file = new File(myDir, "screen.jpg");
-                  Log.i(TAG, "" + file);
-                  if (file.exists())
-                    file.delete();
-                  try {
-                    FileOutputStream out = new FileOutputStream(file);
-                    croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                    out.flush();
-                    out.close();
-                  } catch (Exception e) {
-                    e.printStackTrace();
-                  }
-
-                  String path = "/sdcard/temp/screen.jpg";
-                  File f = new File(path);  //
-                  Uri imageUri = Uri.fromFile(f);
-
-                  mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
-                          imageUri, getContentResolver());
-
-                  ByteArrayOutputStream output = new ByteArrayOutputStream();
-                  mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
-
-                  new DetectionTask().execute(output.toByteArray());
-
-                  if(faces.size() == 0 ) Log.d("here", "here6");
-
-                  ArrayList<UUID> faceIds = new ArrayList<>();
-                  for (Face face: faces) {
-                    faceIds.add(face.faceId);
-                  }
-                  UUID[] uuids = new UUID[faceIds.size()];
-                  for(int i = 0; i < faceIds.size(); i++) {
-                    uuids[i] = faceIds.get(i);
-                  }
-
-                  new IdentificationTask("people").execute(uuids);
-                  Log.d("test", "person: " + person);
-                }*/
 
                     cropToFrameTransform.mapRect(location);
                     result.setLocation(location);
@@ -345,122 +303,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     return DESIRED_PREVIEW_SIZE;
   }
 
-  private class IdentificationTask extends AsyncTask<UUID, String, IdentifyResult[]> {
-    private boolean mSucceed = true;
-    String mPersonGroupId;
-    IdentificationTask(String personGroupId) {
-      this.mPersonGroupId = personGroupId;
-    }
 
-    @Override
-    protected IdentifyResult[] doInBackground(UUID... params) {
-      String logString = "Request: Identifying faces ";
-      for (UUID faceId: params) {
-        logString += faceId.toString() + ", ";
-      }
-      logString += " in group " + mPersonGroupId;
 
-      // Get an instance of face service client to detect faces in image.
-      FaceServiceClient faceServiceClient = new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "86fab03db5424440ae3e31ba2011d96d");
-      try{
-        publishProgress("Getting person group status...");
 
-        TrainingStatus trainingStatus = faceServiceClient.getLargePersonGroupTrainingStatus(
-                this.mPersonGroupId);     /* personGroupId */
-        if (trainingStatus.status != TrainingStatus.Status.Succeeded) {
-          publishProgress("Person group training status is " + trainingStatus.status);
-          mSucceed = false;
-          return null;
-        }
 
-        publishProgress("Identifying...");
-
-        // Start identification.
-        return faceServiceClient.identityInLargePersonGroup(
-                this.mPersonGroupId,   /* personGroupId */
-                params,                  /* faceIds */
-                1);  /* maxNumOfCandidatesReturned */
-      }  catch (Exception e) {
-        mSucceed = false;
-        publishProgress(e.getMessage());
-        return null;
-      }
-    }
-
-    @Override
-    protected void onPreExecute() {
-    }
-
-    @Override
-    protected void onProgressUpdate(String... values) {
-      // Show the status of background detection task on screen.a
-    }
-
-    @Override
-    protected void onPostExecute(IdentifyResult[] result) {
-      person = result[0].candidates.get(0).personId.toString();
-    }
-  }
-
-  private class DetectionTask extends AsyncTask<InputStream, String, Face[]> {
-    @Override
-    protected Face[] doInBackground(InputStream... params) {
-      // Get an instance of face service client to detect faces in image.
-      FaceServiceClient faceServiceClient = new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "86fab03db5424440ae3e31ba2011d96d");
-      try{
-        // Start detection.
-        Log.d("background", "here");
-        Log.d("background", params[0].read() + "" + params[0]);
-
-        return faceServiceClient.detect(
-                params[0],  /* Input stream of image to detect */
-                true,       /* Whether to return face ID */
-                false,       /* Whether to return face landmarks */
-                        /* Which face attributes to analyze, currently we support:
-                           age,gender,headPose,smile,facialHair */
-                null);
-      }  catch (Exception e) {
-        Log.d("aftertry", "here");
-        e.printStackTrace();
-        return null;
-      }
-    }
-
-    @Override
-    protected void onPreExecute() {
-      Log.d("execute", "pre");
-    }
-
-    @Override
-    protected void onProgressUpdate(String... values) {
-      Log.d("execute", "progress");
-    }
-
-    @Override
-    protected void onPostExecute(Face[] result) {
-      //progressDialog.dismiss();
-
-      Log.d("execute", "inside");
-      if (result == null) Log.d("PostExecute", "It's null");
-      if (result != null) {
-        // Set the adapter of the ListView which contains the details of detected faces.
-        Log.d("PostExecute", "inside2");
-        faces = new ArrayList<>();
-        if (result != null) {
-          faces = Arrays.asList(result);
-        }
-        if (result.length == 0) {
-          detected = false;
-          Log.d("test", "No faces detected!");
-        } else {
-          detected = true;
-          Log.d("test", "Click on the \"Identify\" button to identify the faces in image.");
-        }
-      } else {
-        detected = false;
-      }
-    }
-  }
 
 
 }
