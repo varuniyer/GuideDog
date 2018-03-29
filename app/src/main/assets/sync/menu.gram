@@ -1,6 +1,5 @@
 around /1e-1/
 left /1e-1/
-objects /1e-1/
 right /1e-1/
 assistant /1e-1/
 news /1e-1/

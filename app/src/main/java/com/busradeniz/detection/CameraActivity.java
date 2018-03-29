@@ -819,7 +819,8 @@ public abstract class CameraActivity extends Activity
             String[] occurrences = question.split(" ");
             boolean news = question.contains("news");
 
-            boolean near = question.contains("around") || question.contains("objects");
+            boolean near = question.contains("around");
+         //   boolean objects = question.contains("objects");
             boolean front = question.contains("front");
             boolean left = question.contains("left");
             boolean right = question.contains("right");
@@ -923,6 +924,7 @@ public abstract class CameraActivity extends Activity
                         distance = new String((byte[]) msg.obj, 0, msg.arg1);
                         //double m = Integer.parseInt(distance) + 0.0;
                         //meters = m/100.0;
+
                         Log.d("distance", distance);
                         break;
                 }
