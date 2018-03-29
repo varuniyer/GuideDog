@@ -47,7 +47,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     // Tensorflow
     compile 'org.tensorflow:tensorflow-android:+'
-    compile 'com.google.android.gms:play-services-vision:12.0.1'
+    compile 'com.google.android.gms:play-services-vision:10.0.0'
     compile project(':pocketsphinx-android-5prealpha-release')
     // Test Dependencies
     testCompile 'junit:junit:4.12'

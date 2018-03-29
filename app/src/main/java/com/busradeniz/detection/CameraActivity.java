@@ -146,7 +146,7 @@ public abstract class CameraActivity extends Activity
 
     private TextToSpeech textToSpeech;
     private String question;
-
+    private String mainText = "There are no relevant objects in your view";
     private static CameraActivity a;
 
 
@@ -311,6 +311,41 @@ public abstract class CameraActivity extends Activity
             for(String s : arr) if(s.equals(text.trim())) stuff = true;
             if(text.trim().equals("assistant")) {
                 textToSpeech.speak("Guide Dog is listening", TextToSpeech.QUEUE_FLUSH, null);
+            }
+            if(text.trim().equals("news")) {
+                Log.i("news","happened");
+                RequestQueue queue = Volley.newRequestQueue(this);
+                String url = "https://newsapi.org/v2/top-headlines?country=us&sortBy=publishedAt&apiKey="
+                        + API_KEY;
+
+                final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (url, null, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i("JSON Response", response.toString());
+                                try {
+                                    JSONArray articles = response.getJSONArray("articles");
+                                    Log.i("Information", articles.get(0).toString());
+                                    String intro = "Here is an article from" + ((JSONObject)((JSONObject)articles.get(0)).get("source")).get("name");
+                                    String title = ((JSONObject)articles.get(0)).get("title").toString();
+                                    textToSpeech.speak(intro + ": " + title + ".", TextToSpeech.QUEUE_FLUSH, null);
+                                } catch(JSONException j) {
+                                    Log.i("JSON Array Error", j.toString());
+                                    return;
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("JSON Error", error.toString());
+
+                            }
+                        });
+
+                queue.add(jsonObjectRequest);
+                return;
             }
             else question = text;
             makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
@@ -783,41 +818,7 @@ public abstract class CameraActivity extends Activity
         if(question != null) {
             String[] occurrences = question.split(" ");
             boolean news = question.contains("news");
-            if(news) {
-                Log.i("news","happened");
-                RequestQueue queue = Volley.newRequestQueue(this);
-                String url = "https://newsapi.org/v2/top-headlines?country=us&sortBy=publishedAt&apiKey="
-                        + API_KEY;
 
-                final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                        (url, null, new Response.Listener<JSONObject>() {
-
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.i("JSON Response", response.toString());
-                                try {
-                                    JSONArray articles = response.getJSONArray("articles");
-                                    Log.i("Information", articles.get(0).toString());
-                                    String intro = "Here is an article from" + ((JSONObject)((JSONObject)articles.get(0)).get("source")).get("name");
-                                    String title = ((JSONObject)articles.get(0)).get("title").toString();
-                                    textToSpeech.speak(intro + ": " + title + ".", TextToSpeech.QUEUE_FLUSH, null);
-                                } catch(JSONException j) {
-                                    Log.i("JSON Array Error", j.toString());
-                                    return;
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.e("JSON Error", error.toString());
-
-                            }
-                        });
-
-                queue.add(jsonObjectRequest);
-                return;
-            }
             boolean near = question.contains("around") || question.contains("objects");
             boolean front = question.contains("front");
             boolean left = question.contains("left");
@@ -830,6 +831,7 @@ public abstract class CameraActivity extends Activity
             }
             String newStr = "";
             String nearstr = stringBuilder.toString();
+            mainText = stringBuilder.toString();
             String[] sentences = stringBuilder.toString().split("centimeters");
 
             /*if(question.contains("navigate")){
@@ -845,7 +847,7 @@ public abstract class CameraActivity extends Activity
             }*/
 
             if(question.contains("assistant")){
-                newStr = "guide dog is listening";
+                newStr = "";
             }else if(near ||  what) {
                 newStr = nearstr;
             }else{
@@ -870,7 +872,7 @@ public abstract class CameraActivity extends Activity
 
 
 
-            if(newStr.equals("") && !question.contains("right")) newStr = "There are no relevant objects in your view.";
+            if(newStr.equals("") && !question.contains("assistant") && !question.contains("right")) newStr = "There are no relevant objects in your view.";
             textToSpeech.speak(newStr, TextToSpeech.QUEUE_FLUSH, null);
             question = null;
         }
