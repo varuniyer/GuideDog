@@ -327,9 +327,9 @@ public abstract class CameraActivity extends Activity
                                 try {
                                     JSONArray articles = response.getJSONArray("articles");
                                     Log.i("Information", articles.get(0).toString());
-                                    String intro = "Here is an article from" + ((JSONObject)((JSONObject)articles.get(0)).get("source")).get("name");
+                                    String intro = "Here is an article from " + ((JSONObject)((JSONObject)articles.get(0)).get("source")).get("name");
                                     String title = ((JSONObject)articles.get(0)).get("title").toString();
-                                    textToSpeech.speak(intro + ": " + title + ".", TextToSpeech.QUEUE_FLUSH, null);
+                                    textToSpeech.speak(intro + ". " + title + ".", TextToSpeech.QUEUE_FLUSH, null);
                                 } catch(JSONException j) {
                                     Log.i("JSON Array Error", j.toString());
                                     return;
@@ -846,9 +846,15 @@ public abstract class CameraActivity extends Activity
                 Date currentTime = Calendar.getInstance().getTime();
                 String str = currentTime.toString();
                 Log.d("TIME", str);
-                Scanner scan = new Scanner(str);
                 String[] arr = str.split(" ",6);
-               newStr = " The time is " + arr[3]  +".";
+                String ampm = "am";
+                String hour =  arr[3].split(":")[0];
+                if(Integer.parseInt(arr[3].split(":")[0]) > 12) {
+                    ampm = "pm";
+                    hour = "" + (Integer.parseInt(arr[3].split(":")[0]) - 12);
+                }
+                String minute = arr[3].split(":")[1];
+               newStr = " The time is " + hour + " " + minute +" "+ampm+".";
             }else if(question.contains("assistant")){
                     newStr = "";
                 }else if(near ||  what) {
