@@ -43,7 +43,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     // Tensorflow
     compile 'org.tensorflow:tensorflow-android:+'
-    compile 'com.google.android.gms:play-services-vision:10.0.0'
+    compile 'com.google.android.gms:play-services-vision:12.0.0'
     compile project(':pocketsphinx-android-5prealpha-release')
     // Test Dependencies
     testImplementation 'junit:junit:4.12'
@@ -56,4 +56,6 @@ dependencies {
     compile 'com.amazonaws:aws-android-sdk-ddb:2.6.17'
     compile 'com.amazonaws:aws-android-sdk-rekognition:2.6.17'
     compile 'com.microsoft.projectoxford:face:1.4.1'
+    compile 'com.mcxiaoke.volley:library:1.0.0'
+
 }

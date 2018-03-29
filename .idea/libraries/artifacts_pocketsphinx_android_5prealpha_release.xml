@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="artifacts:pocketsphinx-android-5prealpha-release">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/pocketsphinx-android-5prealpha-release.aar/91ce4dcbb455648793c558d0c9febae2/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/pocketsphinx-android-5prealpha-release.aar/91ce4dcbb455648793c558d0c9febae2/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/pocketsphinx-android-5prealpha-release.aar/51ed25ae326416b7f06b246a44ae8597/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/pocketsphinx-android-5prealpha-release.aar/51ed25ae326416b7f06b246a44ae8597/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

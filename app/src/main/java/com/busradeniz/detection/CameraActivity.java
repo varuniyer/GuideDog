@@ -753,7 +753,7 @@ public abstract class CameraActivity extends Activity
             Classifier.Recognition recognition = currentRecognitions.get(i);
             title = recognition.getTitle();
             if(recognition.getTitle().equals("tv")) {
-                stringBuilder.append("screen");
+                stringBuilder.append("monitor");
             }
             if(recognition.getTitle().equals("surfboard")){
                 stringBuilder.append("table");
@@ -848,10 +848,11 @@ public abstract class CameraActivity extends Activity
 
                 return;
             }
-            boolean near = question.contains("near");
+            boolean near = question.contains("around") || question.contains("objects");
             boolean front = question.contains("front");
             boolean left = question.contains("left");
-            boolean right = question.contains("right") || question.contains("my");
+            boolean right = question.contains("right");
+            boolean what = question.contains("what");
             Log.i("right",Boolean.toString(right));
             if(near || front) {
                 left = false;
@@ -873,11 +874,11 @@ public abstract class CameraActivity extends Activity
 
             }*/
 
-            if(question.contains("guide")){
+            if(question.contains("assistant")){
                 newStr = "guide dog is listening";
-            }else if(question.contains("nearby") || question.contains("near") || question.contains("front")) {
+            }else if(near ||  what) {
                 newStr = nearstr;
-            }else if(right){
+            }else{
                 for(String s : sentences) Log.i("sentence", s);
                 for(int i = 1; i < sentences.length; i+=2) {
                     for (int j = 0; j < occurrences.length; j++) {
