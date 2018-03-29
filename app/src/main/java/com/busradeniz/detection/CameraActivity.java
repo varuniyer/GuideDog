@@ -148,6 +148,7 @@ public abstract class CameraActivity extends Activity
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
 
+    String API_KEY = "4d4b29d2140946a39b3c9f797995db98";
 
 
     @Override
@@ -297,11 +298,11 @@ public abstract class CameraActivity extends Activity
         //((TextView) findViewById(R.id.result_text)).setText("");
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
-            Log.i("result text", text);
+            Log.i("result text", ":"+text+":");
 
             boolean stuff = false;
             for(String s : arr) if(s.equals(text.trim())) stuff = true;
-            if(text.equals("dog")) {
+            if(text.trim().equals("assistant")) {
                 textToSpeech.speak("Guide Dog is listening", TextToSpeech.QUEUE_FLUSH, null);
             }
             else question = text;
@@ -842,16 +843,22 @@ public abstract class CameraActivity extends Activity
         if(question!= null) Log.i("question", question);
         if(question != null) {
             String[] occurrences = question.split(" ");
+            boolean news = question.contains("news");
+            if(news) {
+
+                return;
+            }
             boolean near = question.contains("near");
             boolean front = question.contains("front");
             boolean left = question.contains("left");
-            boolean right = (question.contains("right") && question.contains("my"));
+            boolean right = question.contains("right") || question.contains("my");
+            Log.i("right",Boolean.toString(right));
             if(near || front) {
                 left = false;
                 right = false;
             }
             String newStr = "";
-             String nearstr = stringBuilder.toString();
+            String nearstr = stringBuilder.toString();
             String[] sentences = stringBuilder.toString().split("centimeters");
 
             /*if(question.contains("navigate")){
