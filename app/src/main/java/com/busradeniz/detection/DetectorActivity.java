@@ -37,20 +37,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.amazonaws.services.rekognition.model.Face;
-import com.busradeniz.detection.AzureHelper.CreatePersonForGroup;
-import com.busradeniz.detection.AzureHelper.CreatePersonGroup;
 import com.busradeniz.detection.env.BorderedText;
 import com.busradeniz.detection.env.ImageUtils;
 import com.busradeniz.detection.env.Logger;
-import com.busradeniz.detection.tracking.ImageHelper;
 import com.busradeniz.detection.tracking.MultiBoxTracker;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
-import com.microsoft.projectoxford.face.*;
-import com.microsoft.projectoxford.face.contract.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -78,11 +72,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.microsoft.projectoxford.face.*;
-import com.microsoft.projectoxford.face.contract.*;
-import com.microsoft.projectoxford.face.contract.IdentifyResult;
-import com.microsoft.projectoxford.face.contract.TrainingStatus;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -135,7 +124,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   private BorderedText borderedText;
 
   public Context c;
-  private List<Face> faces;
   private boolean detected;
   private Bitmap mBitmap;
 

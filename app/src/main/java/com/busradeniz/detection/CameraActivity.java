@@ -48,10 +48,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.busradeniz.detection.AzureHelper.CreatePersonForGroup;
-import com.busradeniz.detection.AzureHelper.CreatePersonGroup;
-import com.busradeniz.detection.AzureHelper.TrainPersonGroup;
-import com.busradeniz.detection.AzureHelper.UploadPersonFace;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.busradeniz.detection.env.ImageUtils;
 import com.busradeniz.detection.env.Logger;
 import java.nio.ByteBuffer;
@@ -69,7 +72,6 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
-import com.microsoft.projectoxford.face.contract.AddPersistedFaceResult;
 
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -81,6 +83,11 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import edu.cmu.pocketsphinx.Assets;
@@ -393,54 +400,6 @@ public abstract class CameraActivity extends Activity
         //switchSearch(arr[index]);
     }
 
-    public void trainPersonGroup(String group) {
-        new TrainPersonGroup(new TrainPersonGroup.AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-
-            }
-        }).execute(group);
-    }
-
-    public void uploadPersonFace(Bitmap bitmap, String group, String name) {
-        new UploadPersonFace(bitmap, new UploadPersonFace.AsyncResponse() {
-            @Override
-            public void processFinish(AddPersistedFaceResult output) {
-
-            }
-        }).execute(group, name);
-    }
-
-    public void createPersonForGroup(String group, String person) {
-        new CreatePersonForGroup(new CreatePersonForGroup.AsyncResponse() {
-            @Override
-            public void processFinish(String output) {
-            }
-        }).execute(group, person);
-    }
-
-    public static Bitmap drawableToBitmap (Drawable drawable) {
-        Bitmap bitmap = null;
-
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
-            }
-        }
-
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
-
 
     protected int[] getRgbBytes() {
         imageConverter.run();
@@ -564,31 +523,11 @@ public abstract class CameraActivity extends Activity
         super.onStop();
     }
 
-    /*@Override
-    public synchronized void onDestroy() {
-        LOGGER.d("onDestroy " + this);
-        super.onDestroy();
-    }*/
-
     protected synchronized void runInBackground(final Runnable r) {
         if (handler != null) {
             handler.post(r);
         }
     }
-
-    /*@Override
-    public void onRequestPermissionsResult(
-            final int requestCode, final String[] permissions, final int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                setFragment();
-            } else {
-                requestPermission();
-            }
-        }
-    }*/
 
     private boolean hasPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -840,12 +779,43 @@ public abstract class CameraActivity extends Activity
 
 
         Log.i("string", stringBuilder.toString());
-        if(question!= null) Log.i("question", question);
+        if(question != null) Log.i("question", question);
         if(question != null) {
             String[] occurrences = question.split(" ");
             boolean news = question.contains("news");
             if(news) {
+                Log.i("news","happened");
+                RequestQueue queue = Volley.newRequestQueue(this);
+                String url = "https://newsapi.org/v2/top-headlines?country=us&sortBy=publishedAt&apiKey="
+                        + API_KEY;
 
+                final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (url, null, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i("JSON Response", response.toString());
+                                try {
+                                    JSONArray articles = response.getJSONArray("articles");
+                                    Log.i("Information", articles.get(0).toString());
+                                    String intro = "Here is an article from" + ((JSONObject)((JSONObject)articles.get(0)).get("source")).get("name");
+                                    String title = ((JSONObject)articles.get(0)).get("title").toString();
+                                    textToSpeech.speak(intro + ": " + title + ".", TextToSpeech.QUEUE_FLUSH, null);
+                                } catch(JSONException j) {
+                                    Log.i("JSON Array Error", j.toString());
+                                    return;
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("JSON Error", error.toString());
+
+                            }
+                        });
+
+                queue.add(jsonObjectRequest);
                 return;
             }
             boolean near = question.contains("around") || question.contains("objects");

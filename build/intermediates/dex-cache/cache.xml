@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/bd64bd13b8532d952aa3189fc9f84ad6f963773a/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="7efef32744ca4a436492d5cf28c08698cc2af256">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_28a4c3480728ebba0cc9d560ab27e68e8b339b16/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/0ac4c356492048b83e3d5a8848af52eb2bde8409/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="233f60a165ae622c8b36731502ebbda0f65e1930">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_80e8751d5067dce127c954e163ed287be9840270/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/8aaeda7693789ca71bd90b6ddc31e4c393fd9816/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="40392f30a601db5675cdf18192aab013d6fee6ec">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_6ab6ccaf069d3e04008f7ed7a6a5f205668b4858/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.gradle/caches/modules-2/files-2.1/com.mcxiaoke.volley/library/1.0.19/a8f23f65fc1e522ee4a1a697ee569901a46741fa/library-1.0.19.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="a8f23f65fc1e522ee4a1a697ee569901a46741fa">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/library-1.0.19_4313d72b12c839ac48a2f334c8c0e37dbd325b26/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/e68d07917995ae08aa190c1f2f3242a8c89e20a4/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="6849e24d764fc75a3df80f7c1e39196c885c4f8b">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_95dc584b5a2932a22b8ddc37dc43a6bd51864a60/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/07c2bd6d9f32615f083fae9011f5b5ca745d3d16/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0176bff0d9498efaa16a1e6de0f6281cb1360771/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/1eb80e577043af97bd42702f384a87d6e9d5f814/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="cc95ad466da44800955b79689023485ea39924a3">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_9c65bc466423ffa7190ae2d5b95c8649f7cfff00/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/568acb5cac142fcc578760f48216240069faddb3/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="9068775bb0941e0fc1d4ff9adbf5d73475794955">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_a7ad5fc9f3bdf11b4af60055dedd58a72cf61859/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/3149e129de5612014bd3891ef3dd0e333796f071/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="f97cf85b0fe70d37a705111dafa6b1b418ea1650">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_916f96ae65f444743340f1c9eef59f4d0b6c834a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/c61fb4de35a78ee0f367c3b33330c484956fedde/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="22569eca3029ab00583c332a2be220cdbf091b35">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4ea410db73993cb03ee8e5c8b492ebdbd252c5c3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.gradle/caches/modules-2/files-2.1/com.android.support/support-annotations/26.1.0/814258103cf26a15fcc26ecce35f5b7d24b73f8/support-annotations-26.1.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="0814258103cf26a15fcc26ecce35f5b7d24b73f8">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-26.1.0_eb02a472bdeb6241e78bce3ca980574a81799755/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/c84f239d3d8e8d403bd73f731528ada403535de6/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="a38a8974c8d066800237d22a86df2e88cb9e065c">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f4b10eb5614c7af1979461189851e400a5ebc5a7/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/24bdc774b76ad2956a9822e3a331adc4eed069ab/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="2442771a5590dd4eb4bce00c2e9dca9e22e4c963">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3e4b4d5962f74a5e26312a48be1349ab33b4cb78/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/8837cf2ec9086a1f37636c5f343d9f4918e70fb9/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="7e33b895bce39ad22757ea8a41a3674ff19b9907">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_20475f1ecd6569a3572b61b1b1cc7ba4e7e0f16f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/04b4ec6035bf3dadfb580b09978b468a5c22136c/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="b62fdc4cfef174c1e456014195c83fa7de7dc041">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3ddc192515d323837a59105b141012feb4cecd2f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/GuideDog/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="236300d7c931b93d41b1bd6075b26c06d30cecb9">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_f63394c949809ca47685a72166e6126331aeeb51/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/784fe9a9d0912678e4504c533a9e8d841e448596/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="f428e2fbc9ed0b297e3a3f420e51e6982f66822d">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_8ef6ed86c8528b2863efb97ff7a14497e54b0351/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/eff38a233bfb13662535ac5a991c74ab5dff5e15/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="508f50705b4fde51a16259f29c854201a3044516">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4cbfb1e26af081e2efddf0e332d6ca1681c690ef/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/701570ba8e9533e6dbb16e53e74413e84e92590c/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_8b2217d81b90eac636dfb02496c37f2e5d04ad3c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/GuideDog/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_bac6a26fff9cb9784cd7914d63dc988627569778/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.gradle/caches/modules-2/files-2.1/android.arch.lifecycle/common/1.0.0/e414a4cb28434e25c4f6aa71426eb20cf4874ae9/common-1.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="e414a4cb28434e25c4f6aa71426eb20cf4874ae9">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/common-1.0.0_a77754caad06dad253a8511b13ce3891e2f0af1f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.gradle/caches/modules-2/files-2.1/android.arch.core/common/1.0.0/a2d487452376193fc8c103dd2b9bd5f2b1b44563/common-1.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="a2d487452376193fc8c103dd2b9bd5f2b1b44563">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/common-1.0.0_5caeb1de45850b91772faba4fa6547f4eea70d46/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/a53fb30a5ef4552be817ece14a81d2c9682c0443/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="6f4138a4e065826cb044d49faea4cfd7191773d1">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_8937cde2df7bd128b3b47ec82f63dc60c6c130ad/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/6fc19f6091d126ee7d2deb008a9a123401f20376/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="1fddd828aa2365a453562d62b07da4a2d94a24ad">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_bbe311c5a00e49a1dd49bee28b4bbac43a5a1724/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/Library/Android/sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/constraint-layout-solver-1.0.2_fb0c4ec45a97e92e14cf1fab62efd284532faa84/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/varuniyer/.android/build-cache/63c5116e3800f8e1c507533583165bc99a40640f/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="ed8395f343c428cd55c60499f04323083f4ef0db">
+        <dex dex="/Users/varuniyer/GuideDog/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2d7b219198c8c6b127c822aa089eb1e881575e55/classes.dex" />
+    </item>
+
+</items>
