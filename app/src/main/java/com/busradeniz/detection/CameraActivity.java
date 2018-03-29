@@ -801,12 +801,7 @@ public abstract class CameraActivity extends Activity
             stringBuilder.append("  The text in front of you reads " + DetectorActivity.imageText + ".");
         }
 
-        boolean time = true;
-        Date currentTime = Calendar.getInstance().getTime();
-        String str = currentTime.toString();
-        Log.d("TIME", str);
-        Scanner scan = new Scanner(str);
-        String[] arr = str.split(" ",6);
+
 
 
 
@@ -847,26 +842,34 @@ public abstract class CameraActivity extends Activity
 
             }*/
 
-            if(question.contains("assistant")){
-                newStr = "";
-            }else if(near ||  what) {
-                newStr = nearstr;
-            }else{
-                for(String s : sentences) Log.i("sentence", s);
-                for(int i = 1; i < sentences.length; i+=2) {
-                    for (int j = 0; j < occurrences.length; j++) {
-                        if ((sentences[i - 1].contains(occurrences[j]) || sentences[i].contains(occurrences[j]))
-                                && (!left || sentences[i - 1].contains("left") || sentences[i].contains("left")) && (!right || sentences[i - 1].contains("right") || sentences[i].contains("right"))) {
-                            newStr += sentences[i - 1] + "centimeters" + sentences[i];
-                            break;
+            if(question.contains("time")){
+                Date currentTime = Calendar.getInstance().getTime();
+                String str = currentTime.toString();
+                Log.d("TIME", str);
+                Scanner scan = new Scanner(str);
+                String[] arr = str.split(" ",6);
+               newStr = " The time is " + arr[3]  +".";
+            }else if(question.contains("assistant")){
+                    newStr = "";
+                }else if(near ||  what) {
+                    newStr = nearstr;
+                }else{
+                    for(String s : sentences) Log.i("sentence", s);
+                    for(int i = 1; i < sentences.length; i+=2) {
+                        for (int j = 0; j < occurrences.length; j++) {
+                            if ((sentences[i - 1].contains(occurrences[j]) || sentences[i].contains(occurrences[j]))
+                                    && (!left || sentences[i - 1].contains("left") || sentences[i].contains("left")) && (!right || sentences[i - 1].contains("right") || sentences[i].contains("right"))) {
+                                newStr += sentences[i - 1] + "centimeters" + sentences[i];
+                                break;
+                            }
                         }
                     }
                 }
-            }
+
 
            int len = newStr.length()-1;
             if(len > 5){
-                if(Character.isDigit(newStr.charAt(len - 1))){
+                if(!question.contains("time") && Character.isDigit(newStr.charAt(len - 1))){
                     newStr += " centimeters away";
                 }
             }

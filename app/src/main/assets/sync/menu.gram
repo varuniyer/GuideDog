@@ -1,6 +1,7 @@
 around /1e-1/
 left /1e-1/
 right /1e-1/
+time /1e-1/
 assistant /1e-1/
 news /1e-1/
 what /1e-1/

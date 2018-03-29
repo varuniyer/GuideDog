@@ -130,11 +130,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CameraActivity.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CameraActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/busradeniz/detection/CameraActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-561">
-              <caret line="822" column="11" lean-forward="false" selection-start-line="822" selection-start-column="11" selection-end-line="822" selection-end-column="11" />
+            <state relative-caret-position="131">
+              <caret line="871" column="44" lean-forward="false" selection-start-line="871" selection-start-column="44" selection-end-line="871" selection-end-column="44" />
               <folding>
                 <element signature="e#6150#6525#0" expanded="true" />
                 <element signature="e#6524#6525#0" expanded="true" />
@@ -158,11 +158,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="menu.gram" pinned="false" current-in-tab="true">
+      <file leaf-file-name="menu.gram" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/assets/sync/menu.gram">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42">
-              <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+            <state relative-caret-position="63">
+              <caret line="3" column="11" lean-forward="false" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
               <folding />
             </state>
           </provider>
@@ -2434,8 +2434,8 @@
         <option value="$PROJECT_DIR$/app/src/main/assets/sync/digits.gram.md5" />
         <option value="$PROJECT_DIR$/app/src/main/assets/sync/menu.gram.md5" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/busradeniz/detection/CameraActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/assets/sync/menu.gram" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/busradeniz/detection/CameraActivity.java" />
       </list>
     </option>
   </component>
@@ -2587,7 +2587,7 @@
       <option name="DEEP_LINK" value="" />
       <option name="ACTIVITY_CLASS" value="" />
       <method>
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1522332408073" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1522333798262" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2634,7 +2634,7 @@
         <option name="ADVANCED_PROFILING_ENABLED" value="false" />
       </Profilers>
       <method>
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1522332408073" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1522333798262" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2666,6 +2666,27 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
       <method />
     </configuration>
     <configuration default="true" type="JarApplication" factoryName="JAR Application">
@@ -3226,10 +3247,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/sync/menu.gram">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="63">
+          <caret line="3" column="11" lean-forward="false" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/busradeniz/detection/CameraActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-561">
-          <caret line="822" column="11" lean-forward="false" selection-start-line="822" selection-start-column="11" selection-end-line="822" selection-end-column="11" />
+        <state relative-caret-position="131">
+          <caret line="871" column="44" lean-forward="false" selection-start-line="871" selection-start-column="44" selection-end-line="871" selection-end-column="44" />
           <folding>
             <element signature="e#6150#6525#0" expanded="true" />
             <element signature="e#6524#6525#0" expanded="true" />
@@ -3249,14 +3278,6 @@
             <element signature="e#23013#23476#0" expanded="true" />
             <element signature="e#23475#23476#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/sync/menu.gram">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
