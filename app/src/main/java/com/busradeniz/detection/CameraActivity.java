@@ -751,8 +751,8 @@ public abstract class CameraActivity extends Activity
         for (int i = 0; i < currentRecognitions.size(); i++) {
             Classifier.Recognition recognition = currentRecognitions.get(i);
             title = recognition.getTitle();
-            if(recognition.getTitle().equals("person")) {
-
+            if(recognition.getTitle().equals("tv")) {
+                stringBuilder.append("screen");
             }
             if(recognition.getTitle().equals("surfboard")){
                 stringBuilder.append("table");
@@ -833,9 +833,7 @@ public abstract class CameraActivity extends Activity
         Scanner scan = new Scanner(str);
         String[] arr = str.split(" ",6);
 
-        if(stringBuilder.toString().contains("clock")){
-            stringBuilder.append(" The time is " + arr[3]  +".");
-        }
+
 
         if(DetectorActivity.imageText.length() > 32) stringBuilder.append(DetectorActivity.imageText);
 
@@ -847,28 +845,60 @@ public abstract class CameraActivity extends Activity
             boolean near = question.contains("near");
             boolean front = question.contains("front");
             boolean left = question.contains("left");
-            boolean right = question.contains("right");
+            boolean right = (question.contains("right") && question.contains("my"));
             if(near || front) {
                 left = false;
                 right = false;
             }
-            String[] sentences = stringBuilder.toString().split("centimeters");
-            for(String s : sentences) Log.i("sentence", s);
             String newStr = "";
-            for(int i = 1; i < sentences.length; i+=2) {
-                for (int j = 0; j < occurrences.length; j++) {
-                    if ((sentences[i - 1].contains(occurrences[j]) || sentences[i].contains(occurrences[j]))
-                            && (!left || sentences[i - 1].contains("left") || sentences[i].contains("left")) && (!right || sentences[i - 1].contains("right") || sentences[i].contains("right"))) {
-                        newStr += sentences[i - 1] + "centimeters" + sentences[i];
-                        break;
+             String nearstr = stringBuilder.toString();
+            String[] sentences = stringBuilder.toString().split("centimeters");
+
+            /*if(question.contains("navigate")){
+                newStr += "To navigate to the exit, move ";
+                for(String s: sentences){
+                    if(s.contains("right")){
+                        newStr += "to the right passed the"
+                    }
+                }
+
+            }else{
+
+            }*/
+
+            if(question.contains("guide")){
+                newStr = "guide dog is listening";
+            }else if(question.contains("nearby") || question.contains("near") || question.contains("front")) {
+                newStr = nearstr;
+            }else if(right){
+                for(String s : sentences) Log.i("sentence", s);
+                for(int i = 1; i < sentences.length; i+=2) {
+                    for (int j = 0; j < occurrences.length; j++) {
+                        if ((sentences[i - 1].contains(occurrences[j]) || sentences[i].contains(occurrences[j]))
+                                && (!left || sentences[i - 1].contains("left") || sentences[i].contains("left")) && (!right || sentences[i - 1].contains("right") || sentences[i].contains("right"))) {
+                            newStr += sentences[i - 1] + "centimeters" + sentences[i];
+                            break;
+                        }
                     }
                 }
             }
-            if(newStr.equals("")) newStr = "There are no relevant objects in your view.";
+
+           int len = newStr.length()-1;
+            if(len > 5){
+                if(Character.isDigit(newStr.charAt(len - 1))){
+                    newStr += " centimeters away";
+                }
+            }
+
+
+
+            if(newStr.equals("") && !question.contains("right")) newStr = "There are no relevant objects in your view.";
             textToSpeech.speak(newStr, TextToSpeech.QUEUE_FLUSH, null);
             question = null;
         }
     }
+
+
 
     protected abstract void processImage();
 
